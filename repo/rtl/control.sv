@@ -1,13 +1,15 @@
 module control (
-    input  logic [6:0] opcode,
+    input  logic [31:0] instr,
     input  logic       EQ,
     output logic       RegWrite,
     output logic       ALUsrc,
     output logic       ALUctrl,   // 0 = add, 1 = sub
     output logic       ImmSrc,    // 0 = I-type, 1 = B-type
-    output logic       PCSrc
+    output logic       PCsrc
 );
     logic branch;
+    logic [6:0] opcode;
+    assign opcode = instr[6:0];
 
     always_comb begin
         RegWrite = 0;
@@ -32,10 +34,18 @@ module control (
                 ImmSrc   = 1;  // B-type immediate
                 branch   = 1;
             end
+
+            default: begin
+                RegWrite = 0;
+                ALUsrc   = 0;
+                ALUctrl  = 0;
+                ImmSrc   = 0;
+                branch   = 0;
+            end
         endcase
     end
 
-    assign PCSrc = branch & (~EQ);
+    assign PCsrc = branch & (~EQ);
 
 endmodule
 

@@ -3,7 +3,7 @@ module data_unit(
     input logic [5:0] rs1,
     input logic [5:0] rs2,
     input logic [5:0] rd,
-    input logic       reg_write,
+    input logic        reg_write,
     input logic [31:0] din,
     input logic [31:0] imm_op,
     input logic        alu_src,
