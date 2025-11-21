@@ -1,5 +1,7 @@
 module control (
+    /* verilator lint_off UNUSED */
     input  logic [31:0] instr,
+    /* verilator lint_on UNUSED */
     input  logic       EQ,
     output logic       RegWrite,
     output logic       ALUsrc,
