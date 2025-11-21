@@ -20,7 +20,7 @@ logic [31:0] rd1;
 logic [31:0] rd2;
 
 
-reg_file1 reg_file(
+reg_file reg_file(
 
     .read_addr1(rs1),
     .read_addr2(rs2),
@@ -34,7 +34,7 @@ reg_file1 reg_file(
 
 );
 
-opsel mux(
+mux mux(
 
     .in0(rd2),
     .in1(imm_op),
@@ -43,7 +43,7 @@ opsel mux(
 );
 
 
-alu1 alu(
+alu alu(
 
     .alu_op1(rd1),
     .alu_op2(mux_out),
