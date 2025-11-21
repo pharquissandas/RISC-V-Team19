@@ -4,7 +4,7 @@ module top #(
 ) (
     input   logic clk,
     input   logic rst,
-    output  logic [DATA_WIDTH-1:0] a0    
+    output  logic [DATA_WIDTH-1:0] a0    // x10 output
 );
 
 logic RegWrite;
@@ -22,10 +22,12 @@ logic [ADDRESS_WIDTH-1:0] rs1;
 logic [ADDRESS_WIDTH-1:0] rs2;
 logic [ADDRESS_WIDTH-1:0] rd;
 
-assign rs1 = instr[19:15];
-assign rs2 = instr[24:20];
-assign rd  = instr[11:7];
+// decode instruction fields
+assign rs1 = instr[19:15]; // source register 1
+assign rs2 = instr[24:20]; // source register 2
+assign rd  = instr[11:7];  // destination register
 
+// program Counter: holds current instruction address
 PC pc_module (
     .clk(clk),
     .rst(rst),
@@ -34,11 +36,13 @@ PC pc_module (
     .pc(pc)
 );
 
+// instruction memory: fetch instruction at PC
 imem imem (
     .addr(pc),
     .instr(instr)
 );
 
+// control unit: generate control signals based on opcode
 control control (
     .instr(instr),
     .EQ(EQ),
@@ -49,13 +53,15 @@ control control (
     .PCsrc(PCsrc)
 );
 
+// sign-extension unit: generate immediate values
 signext signext (
     .instr(instr),
     .ImmSrc(ImmSrc),
     .ImmOp(ImmOp)
 );
 
-reg_alu_top reg_alu_top (
+// datapath unit: ALU + register file + muxes
+data_unit data_unit (
     .clk(clk),
     .AD1(rs1),
     .AD2(rs2),
