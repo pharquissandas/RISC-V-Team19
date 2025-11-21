@@ -17,15 +17,12 @@ logic [DATA_WIDTH-1:0] ram_array [2**ADDRESS_WIDTH-1:0];
 
 always_ff @(posedge clk)begin
 
-    if (we3 == 1'b1)
+    if (we3 == 1'b1 && write_addr != 0)
         ram_array[write_addr] <= wd3;
-    
-    dout1 <= ram_array[read_addr1];
-    dout2 <= ram_array[read_addr2];
-    a0 <= ram_array[0];
-
 end
 
-
+assign dout1 = ram_array[read_addr1];
+assign dout2 = ram_array[read_addr2];
+assign a0 = ram_array[10];
 
 endmodule
