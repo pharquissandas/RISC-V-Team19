@@ -8,7 +8,7 @@ module imem (
     logic [31:0] mem [0:255];
 
     initial begin
-        $readmemh("program.hex", mem);
+        $readmemh("../rtl/program.hex", mem);
     end
 
     assign instr = mem[addr[9:2]]; 
