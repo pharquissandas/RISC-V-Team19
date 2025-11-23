@@ -16,12 +16,14 @@ logic EQ;
 
 logic [DATA_WIDTH-1:0] pc;
 logic [DATA_WIDTH-1:0] ImmOp;
+logic [DATA_WIDTH-1:0] PCtarget;
 logic [DATA_WIDTH-1:0] instr;
 
 logic [ADDRESS_WIDTH-1:0] rs1;
 logic [ADDRESS_WIDTH-1:0] rs2;
 logic [ADDRESS_WIDTH-1:0] rd;
 
+assign pc_next = pc + ImmOp;
 // decode instruction fields
 assign rs1 = instr[19:15]; // source register 1
 assign rs2 = instr[24:20]; // source register 2
@@ -31,7 +33,7 @@ assign rd  = instr[11:7];  // destination register
 PC pc_module (
     .clk(clk),
     .rst(rst),
-    .ImmOp(ImmOp),
+    .ImmOp(PCtarget),
     .PCsrc(PCsrc),
     .pc(pc)
 );
