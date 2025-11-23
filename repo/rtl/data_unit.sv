@@ -7,9 +7,11 @@ module data_unit #(
     input  logic [ADDRESS_WIDTH-1:0]   AD2,    // rs2 address
     input  logic [ADDRESS_WIDTH-1:0]   AD3,    // rd address
     input  logic [DATA_WIDTH-1:0]      ImmOp,  // immediate value
-    input  logic                       RegWrite, // write enable
+    input  logic                       RegWrite, // write enable to register file
+    input  logic                       MemWrite, // write enable to memory
     input  logic                       ALUctrl,  // ALU control
     input  logic                       ALUsrc,   // select imm or reg
+    input  logic                       ResultSrc, // select ALU or mem data
     output logic                       EQ,       // ALU equality flag
     output logic [DATA_WIDTH-1:0]      a0        // x10 output
 );
@@ -17,7 +19,9 @@ module data_unit #(
 logic [DATA_WIDTH-1:0] ALUout;   // ALU result
 logic [DATA_WIDTH-1:0] ALUop1;   // ALU operand 1
 logic [DATA_WIDTH-1:0] ALUop2;   // ALU operand 2
-logic [DATA_WIDTH-1:0] regOp2;   // register file operand 2
+logic [DATA_WIDTH-1:0] WriteData;   // register file output 2
+logic [DATA_WIDTH-1:0] ReadData;    // data memory output
+logic [DATA_WIDTH-1:0] result;      // data to write back to register file
 
 // register file: read rs1/rs2, write rd
 reg_file reg_file (
@@ -28,13 +32,13 @@ reg_file reg_file (
     .wd3(ALUout),
     .we3(RegWrite),
     .dout1(ALUop1),
-    .dout2(regOp2),
+    .dout2(WriteData),
     .a0(a0)
 );
 
 // select ALU operand 2: register or immediate
-mux mux (
-    .in0(regOp2),
+mux mux1 (
+    .in0(WriteData),
     .in1(ImmOp),
     .sel(ALUsrc),
     .out(ALUop2)
@@ -47,6 +51,22 @@ alu alu (
     .alu_ctrl(ALUctrl),
     .alu_out(ALUout),
     .eq(EQ)
+);
+
+// memory
+data_mem data_mem (
+    .clk(clk),
+    .en(MemWrite),
+    .wr_addr(ALUout),
+    .din(WriteData),
+    .dout(ReadData)
+);
+
+mux mux2 (
+    .in0(ALUout),
+    .in1(ReadData),
+    .sel(ResultSrc),
+    .out(result)
 );
 
 endmodule
