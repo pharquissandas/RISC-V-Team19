@@ -1,57 +1,47 @@
 module control (
-    /* verilator lint_off UNUSED */
     input  logic [31:0] instr,
-    /* verilator lint_on UNUSED */
-    input  logic       EQ,        // equality flag from ALU (1 if operands are equal)
-    output logic       RegWrite,
-    output logic       ALUsrc,
-    output logic       ALUctrl,   // 0 = add, 1 = sub
-    output logic       ImmSrc,    // 0 = I-type, 1 = B-type
-    output logic       PCsrc      // select next PC: 0 = PC+4, 1 = branch target
+    input  logic       EQ,        // ALU zero/equality flag
+
+    output logic        RegWrite,
+    output logic        ALUSrc,
+    output logic [2:0]  ALUctrl,
+    output logic [1:0]  ImmSrc,
+    output logic [1:0]  ResultSrc,
+    output logic        MemWrite,
+    output logic        PCsrc    
 );
 
-    // internal signals
-    logic branch;
-    logic [6:0] opcode;
-    assign opcode = instr[6:0];   // extract opcode (bits [6:0])
+    // fields
+    logic [6:0] opcode = instr[6:0];
+    logic [2:0] funct3 = instr[14:12];
+    logic [6:0] funct7 = instr[31:25];
 
-    // combinational logic: decode opcode to generate control signals
-    always_comb begin
-        RegWrite = 0;
-        ALUsrc   = 0;
-        ALUctrl  = 0;
-        ImmSrc   = 0;
-        branch   = 0;
+    // wires between decoders
+    logic Branch;
+    logic [1:0] ALUOp;
 
-        case (opcode)
-            7'b0010011: begin  // ADDI
-                RegWrite = 1;
-                ALUsrc   = 1;  // immediate
-                ALUctrl  = 0;  // add
-                ImmSrc   = 0;  // I-type
-                branch   = 0;
-            end
+    // instantiate main decoder
+    main_decoder main_dec (
+        .opcode(opcode),
+        .RegWrite(RegWrite),
+        .ALUSrc(ALUSrc),
+        .ResultSrc(ResultSrc),
+        .MemWrite(MemWrite),
+        .ImmSrc(ImmSrc),
+        .Branch(Branch),
+        .ALUOp(ALUOp)
+    );
 
-            7'b1100011: begin  // BNE
-                RegWrite = 0;
-                ALUsrc   = 0;
-                ALUctrl  = 1;  // subtract
-                ImmSrc   = 1;  // B-type immediate
-                branch   = 1;
-            end
+        // instantiate ALU decoder
+    alu_decoder alu_dec (
+        .ALUOp(ALUOp),
+        .funct3(funct3),
+        .funct7(funct7),
+        .ALUctrl(ALUctrl)
+    );
 
-            default: begin
-                RegWrite = 0;
-                ALUsrc   = 0;
-                ALUctrl  = 0;
-                ImmSrc   = 0;
-                branch   = 0;
-            end
-        endcase
-    end
-
-    // determine next PC: branch taken if branch instruction AND operands not equal
-    assign PCsrc = branch & (~EQ);
+    // PCsrc: branch AND zero
+    assign PCsrc = Branch & EQ;
 
 endmodule
 
