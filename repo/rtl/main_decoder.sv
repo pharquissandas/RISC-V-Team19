@@ -6,7 +6,7 @@ module main_decoder (
     output logic       RegWrite,   // enable writing to register file
     output logic       Branch,     // indicates branch instruction
     output logic [1:0] ImmSrc,     // selects type of immediate
-    output logic [1:0] ALUop       // encodes ALU operation type (passed to ALU control)
+    output logic [1:0] ALUOp       // encodes ALU operation type (passed to ALU control)
 );
 
 // combinational logic to decode opcode and generate control signals
@@ -21,7 +21,7 @@ always_comb begin
             RegWrite   = 1;
             Branch     = 0;
             ImmSrc     = 2'b00;
-            ALUop      = 2'b00;
+            ALUOp      = 2'b00;
         end
 
         // store instructions: SB, SH, SW
@@ -32,7 +32,7 @@ always_comb begin
             RegWrite   = 0;
             Branch     = 0;
             ImmSrc     = 2'b01;
-            ALUop      = 2'b00;
+            ALUOp      = 2'b00;
         end
 
         // R-type instructions: ADD, SUB, SLL, SLT, SLTU, XOR, SRL, SRA, OR, AND
@@ -43,7 +43,7 @@ always_comb begin
             RegWrite   = 1;
             Branch     = 0;
             ImmSrc     = 2'b00; // don't care
-            ALUop      = 2'b10;
+            ALUOp      = 2'b10;
         end
 
         // B-type instructions: BEQ, BNE, BLT, BGE, BLTU, BGEU
@@ -54,7 +54,7 @@ always_comb begin
             RegWrite   = 0;
             Branch     = 1;
             ImmSrc     = 2'b10;
-            ALUop      = 2'b01;  // ALU performs subtraction for comparison
+            ALUOp      = 2'b01;  // ALU performs subtraction for comparison
         end
 
         // I-type arithmetic: ADDI, SLTI, SLTIU, XORI, ORI, ANDI, SLLI, SRLI, SRAI
@@ -65,7 +65,7 @@ always_comb begin
             RegWrite   = 1;
             Branch     = 0;
             ImmSrc     = 2'b00;
-            ALUop      = 2'b10;
+            ALUOp      = 2'b10;
         end
 
         7'b0010111: begin // AUIPC U-type
@@ -75,7 +75,7 @@ always_comb begin
             RegWrite   = 1;
             Branch     = 0;
             ImmSrc     = 2'b11; 
-            ALUop      = 2'b00;
+            ALUOp      = 2'b00;
         end
 
         7'b0110111: begin // LUI U-type
@@ -85,7 +85,7 @@ always_comb begin
             RegWrite   = 1;
             Branch     = 0;
             ImmSrc     = 2'b11; 
-            ALUop      = 2'b00;
+            ALUOp      = 2'b00;
         end
 
         7'b1101111: begin // JAL J-type
@@ -95,7 +95,7 @@ always_comb begin
             RegWrite   = 1;
             Branch     = 0;
             ImmSrc     = 2'b00; // don't care
-            ALUop      = 2'b00;
+            ALUOp      = 2'b00;
         end
 
         7'b1100111: begin // JALR I-type
@@ -105,7 +105,7 @@ always_comb begin
             RegWrite   = 1;
             Branch     = 0;
             ImmSrc     = 2'b00;
-            ALUop      = 2'b00;
+            ALUOp      = 2'b00;
         end
 
         default: begin
@@ -115,7 +115,7 @@ always_comb begin
             RegWrite   = 0;
             Branch     = 0;
             ImmSrc     = 2'b00;
-            ALUop      = 2'b00;
+            ALUOp      = 2'b00;
         end
     endcase
 end
