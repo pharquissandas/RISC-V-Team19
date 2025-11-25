@@ -11,7 +11,7 @@ module data_mem #(
 
     // 2^32 32-bit memory locations
     logic [DATA_WIDTH-1:0] ram_array [2**ADDRESS_WIDTH-1:0];
-
+    
     assign dout = ram_array[wr_addr]; // read data from memory assynchronously
 
     always_ff @(posedge clk) begin

@@ -12,6 +12,7 @@ module data_unit #(
     input  logic                       ALUctrl,  // ALU control
     input  logic                       ALUsrc,   // select imm or reg
     input  logic                       ResultSrc, // select ALU or mem data
+    input  logic [2:0]                 funct3,   // for memory access size
     output logic                       EQ,       // ALU equality flag
     output logic [DATA_WIDTH-1:0]      a0        // x10 output
 );
@@ -59,7 +60,8 @@ data_mem data_mem (
     .en(MemWrite),
     .wr_addr(ALUout),
     .din(WriteData),
-    .dout(ReadData)
+    .dout(ReadData),
+    .funct3(funct3)
 );
 
 mux mux2 (

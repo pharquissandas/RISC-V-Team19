@@ -8,14 +8,14 @@ module control (
     output logic [1:0]  ImmSrc,
     output logic [1:0]  ResultSrc,
     output logic        MemWrite,
-    output logic        PCsrc    
+    output logic        PCsrc,    
+    output logic [2:0]  funct3
 );
 
     // fields
     logic [6:0] opcode = instr[6:0];
-    logic [2:0] funct3 = instr[14:12];
     logic [6:0] funct7 = instr[31:25];
-
+    assign funct3 = instr[14:12];
     // wires between decoders
     logic Branch;
     logic [1:0] ALUOp;
