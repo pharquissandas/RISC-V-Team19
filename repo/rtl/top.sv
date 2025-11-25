@@ -13,7 +13,7 @@ logic ALUSrc;
 logic [2:0] ALUctrl;                    // 3-bit ALU control
 logic [2:0] ImmSrc;                     // 2-bit immediate 
 logic [1:0] ResultSrc;
-logic PCsrc;
+logic [1:0] PCsrc;
 logic MemWrite;
 logic [2:0] EQ;
 logic [2:0] funct3;
@@ -23,7 +23,9 @@ logic [DATA_WIDTH-1:0] pc;
 logic [DATA_WIDTH-1:0] instr;
 logic [DATA_WIDTH-1:0] ImmOp;
 logic [DATA_WIDTH-1:0] PCtarget;
+logic [DATA_WIDTH-1:0] ALUout;
 
+logic [6:0] opcode = instr[6:0];
 // register file address fields
 logic [ADDRESS_WIDTH-1:0] rs1;
 logic [ADDRESS_WIDTH-1:0] rs2;
@@ -41,7 +43,8 @@ PC pc_module (
     .rst(rst),
     .PCsrc(PCsrc),
     .ImmOp(PCtarget),
-    .pc(pc)
+    .pc(pc),
+    .JALRjump(ALUout)
 );
 
 // instruction memory: fetch instruction at PC
@@ -85,7 +88,12 @@ data_unit data_unit (
     .MemWrite(MemWrite),
     .EQ(EQ),
     .a0(a0),
-    .funct3(funct3)
+    .funct3(funct3),
+    .PCtarget(PCtarget),
+    .ALUout(ALUout),
+    .PC(pc),
+    .opcode(opcode)
+
 );
 
 endmodule

@@ -7,7 +7,7 @@ module control (
     output logic [2:0]  ImmSrc,
     output logic [1:0]  ResultSrc,
     output logic        MemWrite,
-    output logic        PCsrc,    
+    output logic [1:0]  PCsrc,    
     output logic [2:0]  funct3
 );
 
@@ -39,42 +39,56 @@ module control (
         .ALUctrl(ALUctrl)
     );
 
-    if (Branch) begin
-        case(funct3)
-            3'b000: begin // BEQ
-                if (EQ == 3'b000) begin
-                    PCsrc = 1'b1;
+    always_comb begin
+        if (Branch) begin
+            case(funct3)
+                3'b000: begin // BEQ
+                    if (EQ == 3'b000) begin
+                        PCsrc = 2'b01;
+                    end
                 end
+                3'b001: begin // BNE
+                    if (EQ == 3'b001) begin
+                        PCsrc = 2'b01;
+                    end
+                end
+                3'b100: begin // BLT
+                    if (EQ == 3'b010) begin
+                        PCsrc = 2'b01;
+                    end
+                end
+                3'b101: begin // BGE
+                    if (EQ == 3'b011) begin
+                        PCsrc = 2'b01;
+                    end
+                end
+                3'b110: begin // BLTU
+                    if (EQ == 3'b100) begin
+                        PCsrc = 2'b01;
+                    end
+                end
+                3'b111: begin // BGEU
+                    if (EQ == 3'b101) begin
+                        PCsrc = 2'b01;
+                    end
+                end
+                default: begin
+                    PCsrc = 2'b00;
+                end
+            endcase
+        end
+            
+        case(opcode)
+            7'b1101111: begin // JAL
+                PCsrc = 2'b01;
             end
-            3'b001: begin // BNE
-                if (EQ == 3'b001) begin
-                    PCsrc = 1'b1;
-                end
-            end
-            3'b100: begin // BLT
-                if (EQ == 3'b010) begin
-                    PCsrc = 1'b1;
-                end
-            end
-            3'b101: begin // BGE
-                if (EQ == 3'b011) begin
-                    PCsrc = 1'b1;
-                end
-            end
-            3'b110: begin // BLTU
-                if (EQ == 3'b100) begin
-                    PCsrc = 1'b1;
-                end
-            end
-            3'b111: begin // BGEU
-                if (EQ == 3'b101) begin
-                    PCsrc = 1'b1;
-                end
+            7'b1100111: begin // JALR
+                PCsrc = 2'b10;
             end
             default: begin
-                PCsrc = 1'b0;
+                PCsrc = 2'b00;
             end
         endcase
     end
-endmodule
 
+endmodule
