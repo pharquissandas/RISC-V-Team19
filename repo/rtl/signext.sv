@@ -7,10 +7,13 @@ module signext (
     logic [31:0] immI, immS, immB, immU, immJ;
 
     // I-type
-    assign immI = {{20{instr[31]}}, instr[31:20]};
+    assign immI = {{20{instr[31]}},
+                    instr[31:20]};
 
     // S-type
-    assign immS = {{20{instr[31]}}, instr[31:25], instr[11:7]};
+    assign immS = {{20{instr[31]}},
+                    instr[31:25],
+                    instr[11:7]};
 
     // B-type
     assign immB = {{19{instr[31]}},
