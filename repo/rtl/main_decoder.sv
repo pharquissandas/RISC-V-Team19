@@ -7,7 +7,7 @@ module main_decoder (
     output logic       RegWrite,   // enable writing to register file
     output logic       Branch,     // indicates branch instruction
     output logic [2:0] ImmSrc,     // selects type of immediate
-    output logic [1:0] ALUOp       // encodes ALU operation type (passed to ALU control)
+    output logic [1:0] ALUOp,      // encodes ALU operation type (passed to ALU control)
 );
 
 // combinational logic to decode opcode and generate control signals
@@ -31,7 +31,7 @@ always_comb begin
             ALUsrc    = 1;       // use immediate for address
             RegWrite  = 1;
             Branch    = 0;
-            ImmSrc    = 2'b000;   // I-type immediate
+            ImmSrc    = 3'b000;   // I-type immediate
             ALUOp     = 2'b00;   // ALU does ADD for address
         end
 
@@ -43,7 +43,7 @@ always_comb begin
             ALUsrc    = 1;       // use immediate for address
             RegWrite  = 0;
             Branch    = 0;
-            ImmSrc    = 2'b001;   // S-type immediate
+            ImmSrc    = 3'b001;   // S-type immediate
             ALUOp     = 2'b00;   // ALU does ADD for address
         end
 
@@ -55,7 +55,7 @@ always_comb begin
             ALUsrc    = 0;       // second operand from register
             RegWrite  = 1;       
             Branch    = 0;
-            ImmSrc    = 2'b000;   // don't care
+            ImmSrc    = 3'b000;   // don't care
             ALUOp     = 2'b10;   // R-type ALU decoding
         end
 
@@ -67,7 +67,7 @@ always_comb begin
             ALUsrc    = 0;       // use registers
             RegWrite  = 0;
             Branch    = 1;       // enable branch logic
-            ImmSrc    = 2'b010;   // B-type immediate
+            ImmSrc    = 3'b010;   // B-type immediate
             ALUOp     = 2'b01;   // ALU subtracts for comparison
         end
 
@@ -79,7 +79,7 @@ always_comb begin
             ALUsrc    = 1;       // use immediate
             RegWrite  = 1;
             Branch    = 0;
-            ImmSrc    = 2'b000;   // I-type immediate
+            ImmSrc    = 3'b000;   // I-type immediate
             ALUOp     = 2'b11;   // I-type ALU (distinct from R-type)
         end
 
@@ -91,7 +91,7 @@ always_comb begin
             ALUsrc    = 1;
             RegWrite  = 1;
             Branch    = 0;
-            ImmSrc    = 2'b011;   // U-type immediate
+            ImmSrc    = 3'b011;   // U-type immediate
             ALUOp     = 2'b00;
         end
 
@@ -103,7 +103,7 @@ always_comb begin
             ALUsrc    = 1;
             RegWrite  = 1;
             Branch    = 0;
-            ImmSrc    = 2'b011;   // U-type immediate
+            ImmSrc    = 3'b011;   // U-type immediate
             ALUOp     = 2'b00;
         end
 
@@ -115,7 +115,7 @@ always_comb begin
             ALUsrc    = 1;
             RegWrite  = 1;       // write x[rd] = PC+4
             Branch    = 0;
-            ImmSrc    = 2'100;   
+            ImmSrc    = 3'b100;   
             ALUOp     = 2'b00;
         end
 
@@ -127,7 +127,7 @@ always_comb begin
             ALUsrc    = 1;
             RegWrite  = 1;
             Branch    = 0;
-            ImmSrc    = 2'b000;
+            ImmSrc    = 3'b000;
             ALUOp     = 2'b00;
         end
 
@@ -137,7 +137,7 @@ always_comb begin
             ALUsrc     = 0;
             RegWrite   = 0;
             Branch     = 0;
-            ImmSrc     = 2'b000;
+            ImmSrc     = 3'b000;
             ALUOp      = 2'b00;
         end
     endcase

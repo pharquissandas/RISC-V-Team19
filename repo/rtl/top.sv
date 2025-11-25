@@ -11,22 +11,25 @@ module top #(
 logic RegWrite;
 logic ALUSrc;
 logic [2:0] ALUctrl;                    // 3-bit ALU control
-logic [1:0] ImmSrc;                     // 2-bit immediate 
+logic [2:0] ImmSrc;                     // 2-bit immediate 
 logic [1:0] ResultSrc;
 logic PCsrc;
 logic MemWrite;
-logic EQ;
+logic [2:0] EQ;
+logic [2:0] funct3;
 
 // data wires
 logic [DATA_WIDTH-1:0] pc;
 logic [DATA_WIDTH-1:0] instr;
 logic [DATA_WIDTH-1:0] ImmOp;
+logic [DATA_WIDTH-1:0] PCtarget;
 
 // register file address fields
 logic [ADDRESS_WIDTH-1:0] rs1;
 logic [ADDRESS_WIDTH-1:0] rs2;
 logic [ADDRESS_WIDTH-1:0] rd;
 
+assign pc_next = pc + ImmOp; // PC + immediate for branch target
 // decode instruction fields
 assign rs1 = instr[19:15]; // source register 1
 assign rs2 = instr[24:20]; // source register 2
@@ -37,7 +40,7 @@ PC pc_module (
     .clk(clk),
     .rst(rst),
     .PCsrc(PCsrc),
-    .ImmOp(ImmOp),
+    .ImmOp(PCtarget),
     .pc(pc)
 );
 
@@ -57,7 +60,8 @@ control control (
     .ImmSrc(ImmSrc),
     .ResultSrc(ResultSrc),
     .MemWrite(MemWrite),
-    .PCsrc(PCsrc)
+    .PCsrc(PCsrc),
+    .funct3(funct3)
 );
 
 // sign-extension unit: generate immediate values
@@ -80,7 +84,8 @@ data_unit data_unit (
     .ResultSrc(ResultSrc),
     .MemWrite(MemWrite),
     .EQ(EQ),
-    .a0(a0)
+    .a0(a0),
+    .funct3(funct3)
 );
 
 endmodule
