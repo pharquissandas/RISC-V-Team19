@@ -14,7 +14,7 @@ module alu (
     input logic [31:0] SrcB,
     input logic [3:0] ALUControl,
     output logic [31:0] ALUResult,
-    output logic Zero
+    output logic [2:0] Zero
 );
 
     always_comb begin
@@ -35,6 +35,23 @@ module alu (
         endcase
     end
     
-    assign Zero = (ALUResult == 32'b0);
-
+    if ($signed(SrcA) == $signed(SrcB)) begin
+        assign Zero = 3'b000; // zero flag
+    end
+    if ($signed(SrcA) != $signed(SrcB)) begin
+        assign Zero = 3'b001; // not equal
+    end
+    if ($signed(SrcA) < $signed(SrcB)) begin
+        assign Zero = 3'b010; // less than flag
+    end
+    if ($signed(SrcA) >= $signed(SrcB)) begin
+        assign Zero = 3'b011; // greater/equal than flag
+    end
+    if ($unsigned(SrcA) < $unsigned(SrcB)) begin
+        assign Zero = 3'b100; // less than flag unsigned
+    end
+    if ($unsigned(SrcA) >= $unsigned(SrcB)) begin
+        assign Zero = 3'b101; // greater/equal than flag unsinged
+    end
+    
 endmodule

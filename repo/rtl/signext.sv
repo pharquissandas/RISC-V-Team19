@@ -43,5 +43,5 @@ module signext (
             3'b100: ImmOp = immJ;   // J-type
             default: ImmOp = 32'b0;
         endcase
-    end
+    end
 endmodule

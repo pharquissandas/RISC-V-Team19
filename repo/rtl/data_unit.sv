@@ -13,7 +13,7 @@ module data_unit #(
     input  logic                       ALUsrc,   // select imm or reg
     input  logic                       ResultSrc, // select ALU or mem data
     input  logic [2:0]                 funct3,   // for memory access size
-    output logic                       EQ,       // ALU equality flag
+    output logic [2:0]                 EQ,       // ALU equality flag
     output logic [DATA_WIDTH-1:0]      a0        // x10 output
 );
 

@@ -1,11 +1,10 @@
 module control (
     input  logic [31:0] instr,
-    input  logic       EQ,        // ALU zero/equality flag
-
+    input  logic [2:0]  EQ,       
     output logic        RegWrite,
     output logic        ALUSrc,
     output logic [2:0]  ALUctrl,
-    output logic [1:0]  ImmSrc,
+    output logic [2:0]  ImmSrc,
     output logic [1:0]  ResultSrc,
     output logic        MemWrite,
     output logic        PCsrc,    
@@ -40,8 +39,42 @@ module control (
         .ALUctrl(ALUctrl)
     );
 
-    // PCsrc: branch AND zero
-    assign PCsrc = Branch & EQ;
-
+    if (Branch) begin
+        case(funct3)
+            3'b000: begin // BEQ
+                if (EQ == 3'b000) begin
+                    PCsrc = 1'b1;
+                end
+            end
+            3'b001: begin // BNE
+                if (EQ == 3'b001) begin
+                    PCsrc = 1'b1;
+                end
+            end
+            3'b100: begin // BLT
+                if (EQ == 3'b010) begin
+                    PCsrc = 1'b1;
+                end
+            end
+            3'b101: begin // BGE
+                if (EQ == 3'b011) begin
+                    PCsrc = 1'b1;
+                end
+            end
+            3'b110: begin // BLTU
+                if (EQ == 3'b100) begin
+                    PCsrc = 1'b1;
+                end
+            end
+            3'b111: begin // BGEU
+                if (EQ == 3'b101) begin
+                    PCsrc = 1'b1;
+                end
+            end
+            default: begin
+                PCsrc = 1'b0;
+            end
+        endcase
+    end
 endmodule
 
