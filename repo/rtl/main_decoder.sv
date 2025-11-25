@@ -1,7 +1,7 @@
 module main_decoder (
     input logic [6:0]  opcode,     // 7-bit opcode field from the instruction
 
-    output logic       ResultSrc,  // selects data written to register file (ALU result or memory data)
+    output logic [1:0] ResultSrc,  // selects data written to register file (ALU result or memory data)
     output logic       MemWrite,   // enable writing to data memory
     output logic       ALUsrc,     // selects ALU second operand (0 = register, 1 = immediate)
     output logic       RegWrite,   // enable writing to register file
@@ -13,7 +13,7 @@ module main_decoder (
 // combinational logic to decode opcode and generate control signals
 always_comb begin
     // default values (safe defaults)
-    ResultSrc = 0;
+    ResultSrc = 2'b00;
     MemWrite  = 0;
     ALUsrc    = 0;
     RegWrite  = 0;
@@ -26,7 +26,7 @@ always_comb begin
         // load instructions: LB, LH, LW, LBU, LHU
         // opcode = 0000011 
         7'b0000011: begin
-            ResultSrc = 1;       // load data from memory
+            ResultSrc = 2'b01;       // load data from memory
             MemWrite  = 0;
             ALUsrc    = 1;       // use immediate for address
             RegWrite  = 1;
@@ -38,7 +38,7 @@ always_comb begin
         // store instructions: SB, SH, SW S-type
         // opcode = 0100011
         7'b0100011: begin
-            ResultSrc = 0;       // don't care
+            ResultSrc = 2'b00;       // don't care
             MemWrite  = 1;       // write to data memory
             ALUsrc    = 1;       // use immediate for address
             RegWrite  = 0;
@@ -50,7 +50,7 @@ always_comb begin
         // R-type instructions: ADD, SUB, SLL, SLT, SLTU, XOR, SRL, SRA, OR, AND
         // opcode = 0110011
         7'b0110011: begin
-            ResultSrc = 0;       
+            ResultSrc = 2'b00;       
             MemWrite  = 0;
             ALUsrc    = 0;       // second operand from register
             RegWrite  = 1;       
@@ -62,7 +62,7 @@ always_comb begin
         // B-type instructions: BEQ, BNE, BLT, BGE, BLTU, BGEU
         // opcode = 1100011
         7'b1100011: begin
-            ResultSrc = 0;       // don't care
+            ResultSrc = 2'b00;       // don't care
             MemWrite  = 0;
             ALUsrc    = 0;       // use registers
             RegWrite  = 0;
@@ -74,7 +74,7 @@ always_comb begin
         // I-type arithmetic: ADDI, SLTI, SLTIU, XORI, ORI, ANDI, SLLI, SRLI, SRAI
         // opcode = 0010011
         7'b0010011: begin
-            ResultSrc = 0;
+            ResultSrc = 2'b00;
             MemWrite  = 0;
             ALUsrc    = 1;       // use immediate
             RegWrite  = 1;
@@ -86,7 +86,7 @@ always_comb begin
         // AUIPC (U-type)
         // opcode = 0010111
         7'b0010111: begin
-            ResultSrc = 0;
+            ResultSrc = 2'b00;
             MemWrite  = 0;
             ALUsrc    = 1;
             RegWrite  = 1;
@@ -98,7 +98,7 @@ always_comb begin
         // LUI (U-type)
         // opcode = 0110111
         7'b0110111: begin
-            ResultSrc = 0;
+            ResultSrc = 2'b00;
             MemWrite  = 0;
             ALUsrc    = 1;
             RegWrite  = 1;
@@ -110,7 +110,7 @@ always_comb begin
         // JAL (J-type)
         // opcode = 1101111
         7'b1101111: begin
-            ResultSrc = 0;       // return address is PC+4 (handled in datapath)
+            ResultSrc = 2'b10;       // return address is PC+4 (handled in datapath)
             MemWrite  = 0;
             ALUsrc    = 1;
             RegWrite  = 1;       // write x[rd] = PC+4
@@ -122,7 +122,7 @@ always_comb begin
         // JALR (I-type)
         // opcode = 1100111
         7'b1100111: begin
-            ResultSrc = 0;
+            ResultSrc = 2'b10;
             MemWrite  = 0;
             ALUsrc    = 1;
             RegWrite  = 1;
@@ -132,7 +132,7 @@ always_comb begin
         end
 
         default: begin
-            ResultSrc  = 0;
+            ResultSrc  = 2'b00;
             MemWrite   = 0;
             ALUsrc     = 0;
             RegWrite   = 0;
