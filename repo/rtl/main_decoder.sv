@@ -1,13 +1,16 @@
 module main_decoder (
     input logic [6:0]  opcode,     // 7-bit opcode field from the instruction
 
-    output logic [1:0] ResultSrc,  // selects data written to register file (ALU result or memory data)
+    output logic [1:0] ResultSrc,  // control the source of data to write back to register file (00 = ALU, 01 = Memory, 10 = PC+4)
+    output logic [1:0] PCSrc,      // control the source for the next PC value (00 = PC+4, 01 = PC + imm(branch/jal), 10 = ALUResult (jalr))
     output logic       MemWrite,   // enable writing to data memory
-    output logic       ALUsrc,     // selects ALU second operand (0 = register, 1 = immediate)
+    output logic       ALUSrc,     // selects ALU second operand (0 = register, 1 = immediate)
     output logic       RegWrite,   // enable writing to register file
     output logic       Branch,     // indicates branch instruction
-    output logic [2:0] ImmSrc,     // selects type of immediate
+    output logic       Jump,
+    output logic [2:0] ImmSrc,     // selects type of immediate (I = 000, S = 001, B = 010, U = 011, J = 100)
     output logic [1:0] ALUOp,      // encodes ALU operation type (passed to ALU control)
+    output logic [2:0] AddressingControl
 );
 
 // combinational logic to decode opcode and generate control signals
@@ -15,7 +18,7 @@ always_comb begin
     // default values (safe defaults)
     ResultSrc = 2'b00;
     MemWrite  = 0;
-    ALUsrc    = 0;
+    ALUSrc    = 0;
     RegWrite  = 0;
     Branch    = 0;
     ImmSrc    = 3'b000;
@@ -28,7 +31,7 @@ always_comb begin
         7'b0000011: begin
             ResultSrc = 2'b01;       // load data from memory
             MemWrite  = 0;
-            ALUsrc    = 1;       // use immediate for address
+            ALUSrc    = 1;       // use immediate for address
             RegWrite  = 1;
             Branch    = 0;
             ImmSrc    = 3'b000;   // I-type immediate
@@ -40,7 +43,7 @@ always_comb begin
         7'b0100011: begin
             ResultSrc = 2'b00;       // don't care
             MemWrite  = 1;       // write to data memory
-            ALUsrc    = 1;       // use immediate for address
+            ALUSrc    = 1;       // use immediate for address
             RegWrite  = 0;
             Branch    = 0;
             ImmSrc    = 3'b001;   // S-type immediate
@@ -52,7 +55,7 @@ always_comb begin
         7'b0110011: begin
             ResultSrc = 2'b00;       
             MemWrite  = 0;
-            ALUsrc    = 0;       // second operand from register
+            ALUSrc    = 0;       // second operand from register
             RegWrite  = 1;       
             Branch    = 0;
             ImmSrc    = 3'b000;   // don't care
@@ -64,7 +67,7 @@ always_comb begin
         7'b1100011: begin
             ResultSrc = 2'b00;       // don't care
             MemWrite  = 0;
-            ALUsrc    = 0;       // use registers
+            ALUSrc    = 0;       // use registers
             RegWrite  = 0;
             Branch    = 1;       // enable branch logic
             ImmSrc    = 3'b010;   // B-type immediate
@@ -76,7 +79,7 @@ always_comb begin
         7'b0010011: begin
             ResultSrc = 2'b00;
             MemWrite  = 0;
-            ALUsrc    = 1;       // use immediate
+            ALUSrc    = 1;       // use immediate
             RegWrite  = 1;
             Branch    = 0;
             ImmSrc    = 3'b000;   // I-type immediate
@@ -88,7 +91,7 @@ always_comb begin
         7'b0010111: begin
             ResultSrc = 2'b00;
             MemWrite  = 0;
-            ALUsrc    = 1;
+            ALUSrc    = 1;
             RegWrite  = 1;
             Branch    = 0;
             ImmSrc    = 3'b011;   // U-type immediate
@@ -100,7 +103,7 @@ always_comb begin
         7'b0110111: begin
             ResultSrc = 2'b00;
             MemWrite  = 0;
-            ALUsrc    = 1;
+            ALUSrc    = 1;
             RegWrite  = 1;
             Branch    = 0;
             ImmSrc    = 3'b011;   // U-type immediate
@@ -112,7 +115,7 @@ always_comb begin
         7'b1101111: begin
             ResultSrc = 2'b10;       // return address is PC+4 (handled in datapath)
             MemWrite  = 0;
-            ALUsrc    = 1;
+            ALUSrc    = 1;
             RegWrite  = 1;       // write x[rd] = PC+4
             Branch    = 0;
             ImmSrc    = 3'b100;   
@@ -124,7 +127,7 @@ always_comb begin
         7'b1100111: begin
             ResultSrc = 2'b10;
             MemWrite  = 0;
-            ALUsrc    = 1;
+            ALUSrc    = 1;
             RegWrite  = 1;
             Branch    = 0;
             ImmSrc    = 3'b000;
@@ -134,7 +137,7 @@ always_comb begin
         default: begin
             ResultSrc  = 2'b00;
             MemWrite   = 0;
-            ALUsrc     = 0;
+            ALUSrc     = 0;
             RegWrite   = 0;
             Branch     = 0;
             ImmSrc     = 3'b000;
