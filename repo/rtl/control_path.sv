@@ -48,7 +48,8 @@ module control_path(
         .Branch(Branch),
         .Zero(Zero),
         .BranchType(BranchType),
-        .PCSrc(PCSrc)
+        .PCSrc(PCSrc),
+        .ALUResult(ALUResult)
     );
     
 endmodule
