@@ -1,3 +1,5 @@
+# Store the least significant byte of a register into memory
+
 .text
 .globl main
 

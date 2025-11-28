@@ -1,3 +1,5 @@
+# Load a byte from memory into a register and zero-extend it to 32 bits
+
 .text
 .globl main
 

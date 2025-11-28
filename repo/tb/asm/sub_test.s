@@ -1,3 +1,5 @@
+# Subtract the second register from the first register and store the result in rd
+
 .text
 .globl main
 

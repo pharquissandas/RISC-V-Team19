@@ -1,3 +1,5 @@
+# Jump to an address in a register and store the return address in rd (used for indirect function calls)
+
 .text
 .globl main
 

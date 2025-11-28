@@ -1,3 +1,5 @@
+# Jump to a label and store the return address in rd (used for function calls)
+
 .text
 .globl main
 
