@@ -12,6 +12,7 @@ module pcsrc_unit (
 
         // handle jumps first
         case (Jump)
+            default: PCSrc = 2'b00;
             2'b01: PCSrc = 2'b01; // JAL
             2'b10: PCSrc = 2'b10; // JALR
             2'b00: begin

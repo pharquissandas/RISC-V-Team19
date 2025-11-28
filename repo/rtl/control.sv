@@ -137,6 +137,8 @@ module control(
                     // BLTU, BGEU: ALU does SLTU (1001)
                     3'b110: ALUControl = 4'b1001; // bltu
                     3'b111: ALUControl = 4'b1001; // bgeu
+                    default: ALUControl = 4'b0000;
+
                 endcase
             end
 
