@@ -1,3 +1,5 @@
+# Load a 20-bit immediate into the upper 20 bits of a register, setting the lower 12 bits to zero
+
 .text
 .globl main
 main:

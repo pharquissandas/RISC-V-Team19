@@ -1,3 +1,5 @@
+# Shift the bits in a register right logically (fill with zeros) and store the result in rd
+
 .text
 .globl main
 

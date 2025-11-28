@@ -1,3 +1,5 @@
+# Shift the bits in a register right arithmetically (preserving the sign) and store the result in rd
+
 .text
 .globl main
 

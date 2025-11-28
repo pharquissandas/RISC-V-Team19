@@ -1,3 +1,5 @@
+# Perform bitwise OR of a register with an immediate value and store the result in rd
+
 .text
 .globl main
 

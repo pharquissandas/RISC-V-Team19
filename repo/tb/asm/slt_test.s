@@ -1,3 +1,5 @@
+# Set rd to 1 if the first register is less than the second register (signed comparison), otherwise set rd to 0
+
 .text
 .globl main
 

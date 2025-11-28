@@ -1,3 +1,5 @@
+# Shift the bits in a register left by an immediate value and store the result in rd
+
 .text
 .globl main
 

@@ -1,3 +1,5 @@
+# Store a 32-bit word from a register into memory
+
 .text
 .globl main
 

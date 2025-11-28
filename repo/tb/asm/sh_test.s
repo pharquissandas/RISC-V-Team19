@@ -1,3 +1,5 @@
+# Store the least significant 16 bits (halfword) of a register into memory
+
 .text
 .globl main
 

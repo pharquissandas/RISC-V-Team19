@@ -1,3 +1,5 @@
+# Set rd to 1 if the register is less than an immediate value (signed comparison), otherwise set rd to 0
+
 .text
 .globl main
 
