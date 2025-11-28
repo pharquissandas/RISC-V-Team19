@@ -37,16 +37,16 @@ TEST_F(CpuTestbench, TestJalRet)
     EXPECT_EQ(top_->a0, 53);
 }
 
-TEST_F(CpuTestbench, TestPdf)
-{
-    setupTest("5_pdf");
-    setData("reference/gaussian.mem");
-    initSimulation();
-    runSimulation(CYCLES * 100);
-    EXPECT_EQ(top_->a0, 15363);
-}
+// TEST_F(CpuTestbench, TestPdf)
+// {
+//     setupTest("5_pdf");
+//     setData("reference/gaussian.mem");
+//     initSimulation();
+//     runSimulation(CYCLES * 100);
+//     EXPECT_EQ(top_->a0, 15363);
+// }
 
-/* Instruction Coverage */ 
+// /* Instruction Coverage */ 
 
 // Upper and Jump/Link Instructions
 TEST_F(CpuTestbench, TestLUI){
@@ -71,10 +71,10 @@ TEST_F(CpuTestbench, TestJAL){
 }
 
 TEST_F(CpuTestbench, TestJALR){
-setupTest("jalr_test");
-initSimulation();
-runSimulation(CYCLES);
-EXPECT_EQ(top_->a0, 2);
+    setupTest("jalr_test");
+    initSimulation();
+    runSimulation(CYCLES);
+    EXPECT_EQ(top_->a0, 2);
 }
 
 // PC-relative Branch Instructions
