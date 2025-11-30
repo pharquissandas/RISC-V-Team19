@@ -13,9 +13,10 @@ module fetch(
 
 );
 
+assign PCF = PCCurr;
 
 logic [31:0] PCCurr;
-logic [31:0] PCFNext;
+
 
 pc_pipeline pc_inst(
 
