@@ -13,14 +13,11 @@ module fetch_to_decode_register(
 );
 
     always_ff @(posedge clk) begin
-        if(en)
+        if(en) begin
             PCD      <= PCF;
             PCPlus4D <= PCPlus4F;
             InstrD   <= InstrF;
-        else
-            PCD <= PCD;
-            PCPlus4D <= PCPlus4D;
-            InstrD <= InstrD;
+        end
     end
-
+//fine to have no else? I think so
 endmodule

@@ -2,10 +2,13 @@
 
 module hazard_unit_top(
 
+    input logic [4:0] Rs1D, //source register from instruction in decode stage
+    input logic [4:0] Rs2D, //source register from instruction in decode stage
     input logic [4:0] Rs1E, //source register from instruction in execution stage
     input logic [4:0] Rs2E, //source register from instruction in execution stage
     input logic [4:0] RdM,  //destination register of an instruction in memory/writeback stage
     input logic [4:0] RdW,  //destination register of an instruction in memory/writeback stage
+    input logic [4:0] RdE,  //destination register of an instruction in execution stage
     input logic        RegWriteW, //tells us whether destination register is actually written
     input logic        RegWriteM,  //tells us whether destination register is actually written
     input logic [31:0] ALUResultM,
@@ -17,7 +20,8 @@ module hazard_unit_top(
     output logic [31:0] SrcAE,
     output logic [31:0] WriteDataE,
     output logic        FEN,
-    output logic        DEN
+    output logic        DEN,
+    output logic        RSTE
 );
 
 //when we have a lw instruction in exectution stage the ResultSrcE = 01
@@ -90,6 +94,18 @@ mux3input bemux(
     .y(WriteDataE)
 );
 
+stall_unit stall_unit1(
+
+    .ResultSrcE(ResultSrcE),
+    .RDE(RDE),
+    .Rs1D(Rs1D),
+    .Rs2D(Rs2D),
+
+    .FEN(FEN),
+    .DEN(DEN),
+    .RSTE(RSTE)
+
+);
 
 
 endmodule

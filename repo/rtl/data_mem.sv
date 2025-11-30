@@ -36,7 +36,7 @@ module data_mem #(
         end
     end
 
-    always_comb begin
+    always_comb begin //should we only read if WE = 0?
         case (AddressingControl)
             3'b000: RD = {{24{ram_array[addr][7]}}, ram_array[addr]}; // LB (signed)
             3'b001: RD = {{16{ram_array[addr+1][7]}}, ram_array[addr+1], ram_array[addr]}; // LH (signed)
