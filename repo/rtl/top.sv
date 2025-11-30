@@ -88,6 +88,8 @@ module top (
 
     logic [31:0] WriteDataE;
     logic [31:0] PCPlus4E;
+    logic [31:0] a0D;
+
 
 
     fetch fetch1(
@@ -141,7 +143,7 @@ module top (
         .ALUSrcBD(ALUSrcBD),
         .ALUSrcAD(ALUSrcAD),
         .AddressingControlD(AddressingControlD),
-        .a0D(a0)
+        .a0D(a0D)
     );
 
     decode_to_execute_register dter(
@@ -269,8 +271,10 @@ module top (
         .ReadDataW(ReadDataW),
         .PCPlus4W(PCPlus4W),
         .ResultSrcW(ResultSrcW),
+        .a0D(a0D),
 
-        .ResultW(ResultW)
+        .ResultW(ResultW),
+        .a0M(a0)
 
     );
 
