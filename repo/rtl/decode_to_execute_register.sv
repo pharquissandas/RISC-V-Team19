@@ -1,5 +1,6 @@
 module decode_to_execute_register(
 
+    input logic en,
     input logic clk,
     input logic RegWriteD,
     input logic [1:0] ResultSrcD,
@@ -42,25 +43,28 @@ module decode_to_execute_register(
     output logic [31:0] PCPlus4E
 );
     always_ff @(posedge clk) begin
-        RegWriteE          <= RegWriteD;
-        ResultSrcE         <= ResultSrcD;
-        MemWriteE          <= MemWriteD;
-        JumpE              <= JumpD;
-        BranchE            <= BranchD;
-        ALUControlE        <= ALUControlD;
-        ALUSrcAE           <= ALUSrcAD;
-        ALUSrcBE           <= ALUSrcBD;
-        AddressingControlE <= AddressingControlD;
-        BranchTypeE        <= BranchTypeD;
 
-        RD1E        <= RD1D;
-        RD2E        <= RD2D;
-        PCE         <= PCD;
-        Rs1E        <= Rs1D;
-        Rs2E        <= Rs2D;
-        RdE         <= RdD;
-        ImmExtE     <= ImmExtD;
-        PCPlus4E    <= PCPlus4D;
+        if(en) begin
+            RegWriteE          <= RegWriteD;
+            ResultSrcE         <= ResultSrcD;
+            MemWriteE          <= MemWriteD;
+            JumpE              <= JumpD;
+            BranchE            <= BranchD;
+            ALUControlE        <= ALUControlD;
+            ALUSrcAE           <= ALUSrcAD;
+            ALUSrcBE           <= ALUSrcBD;
+            AddressingControlE <= AddressingControlD;
+            BranchTypeE        <= BranchTypeD;
+
+            RD1E        <= RD1D;
+            RD2E        <= RD2D;
+            PCE         <= PCD;
+            Rs1E        <= Rs1D;
+            Rs2E        <= Rs2D;
+            RdE         <= RdD;
+            ImmExtE     <= ImmExtD;
+            PCPlus4E    <= PCPlus4D;
+        end
     end
 
 endmodule

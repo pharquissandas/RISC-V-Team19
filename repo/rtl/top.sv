@@ -91,6 +91,7 @@ module top (
     logic [31:0] a0D;
     logic        FEN;
     logic        DEN;      
+    logic        RSTE;   
 
 
 
@@ -217,6 +218,7 @@ module top (
     execute_to_memory_register etmr(
 
         .clk(clk),
+        .rst(RSTE),
         .RegWriteE(RegWriteE),
         .ResultSrcE(ResultSrcE),
         .MemWriteE(MemWriteE),
@@ -298,7 +300,8 @@ module top (
         .SrcAE(SrcAE),
         .WriteDataE(WriteDataE),
         .FEN(FEN),
-        .DEN(DEN)
+        .DEN(DEN),
+        .RSTE(RSTE)
 
     );
 
