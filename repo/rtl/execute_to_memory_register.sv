@@ -26,9 +26,9 @@ module execute_to_memory_register (
     always_ff @(posedge clk) begin
         if (rst) begin //flush
             RegWriteM          <= 1'b0;
-            ResultSrcM         <= 2'b0;
+            ResultSrcM         <= 2'b00;
             MemWriteM          <= 1'b0;
-            AddressingControlM <= 3'b0;
+            AddressingControlM <= 3'b000; // is this correct behaviour in flush?
 
             ALUResultM   <= 32'b0;
             WriteDataM   <= 32'b0;
