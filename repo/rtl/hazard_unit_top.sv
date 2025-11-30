@@ -30,7 +30,8 @@ module hazard_unit_top(
 //when we have a lw instruction in exectution stage the ResultSrcE = 01
 //this is when we stall the fetch and decode stages (for next cycle) to avoid
 //lw data hazard
-
+//also if ResultSrcE = 10 then we are also changing the PC so flush
+//execution and decode
 
 always_comb begin
 
@@ -78,7 +79,7 @@ logic flushE1;
 logic flushE2;
 
 always_comb begin
-    RSTE = (flushE1 | flushE2);
+    RSTE = (flushE1 | flushE2); //flush execution register if we stall or if we have a control hazard
 end
 
 mux3input aemux(
@@ -115,6 +116,7 @@ stall_unit stall_unit1(
 
 );
 
+//handles control hazards caused by branches (and jumps)
 control_hazard_unit control_hazard_unit1(
 
     .PCSrcE(PCSrcE),
