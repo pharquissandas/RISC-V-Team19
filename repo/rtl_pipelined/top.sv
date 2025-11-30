@@ -290,9 +290,13 @@ module top (
         .RdW(RdW),
         .RegWriteW(RegWriteW),
         .RegWriteM(RegWriteM),
-    
-        .ForwardAE(ForwardAE),
-        .ForwardBE(ForwardBE),
+        .ALUResultM(ALUResultM),
+        .ResultW(ResultW),
+        .RD1E(RD1E),
+        .RD2E(RD2E),
+
+        .SrcAe(SrcAE),
+        .WriteDataE(WriteDataE)
 
     );
 
