@@ -16,12 +16,15 @@ module hazard_unit_top(
     input logic [31:0] RD1E,
     input logic [31:0] RD2E,
     input logic [1:0]  ResultSrcE,
+    input logic [1:0]  PCSrcE,
 
     output logic [31:0] SrcAE,
     output logic [31:0] WriteDataE,
     output logic        FEN,
     output logic        DEN,
-    output logic        RSTE
+    output logic        RSTE,
+    output logic        RSTD
+
 );
 
 //when we have a lw instruction in exectution stage the ResultSrcE = 01
@@ -71,7 +74,12 @@ hazard_unit hazard_unit1(
 
 );
 
+logic flushE1;
+logic flushE2;
 
+always_comb begin
+    RSTE = (flushE1 | flushE2);
+end
 
 mux3input aemux(
 
@@ -103,7 +111,16 @@ stall_unit stall_unit1(
 
     .FEN(FEN),
     .DEN(DEN),
-    .RSTE(RSTE)
+    .RSTE(flushE1)
+
+);
+
+control_hazard_unit control_hazard_unit1(
+
+    .PCSrcE(PCSrcE),
+
+    .RSTD(RSTD),
+    .RSTE(flushE2)
 
 );
 
