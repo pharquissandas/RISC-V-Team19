@@ -1,18 +1,11 @@
 module execute(
 
-input logic        RegWriteE,
-input logic [1:0]  ResultSrcE,
-input logic        MemWriteE,
 input logic [1:0]  JumpE,
 input logic        BranchE,
 input logic [3:0]  ALUControlE,
 input logic        ALUSrcAE,
 input logic        ALUSrcBE,
-input logic [31:0] RD1E,
-input logic [31:0] RD2E,
 input logic [31:0] PCE,
-input logic [4:0]  Rs1E,
-input logic [4:0]  Rs2E,
 input logic [31:0] ImmExtE,
 input logic [31:0] SrcAE, //comes from hazard unit
 input logic [31:0] WriteDataE,
@@ -25,7 +18,7 @@ output logic [31:0] PCTargetE
 );
 
 logic ZeroE;
-logic tmp;
+//logic tmp;
 
 
 logic [31:0] SrcBE;

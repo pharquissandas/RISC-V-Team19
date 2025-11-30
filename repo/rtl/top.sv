@@ -63,7 +63,7 @@ module top (
     logic [4:0] Rs2E;
     logic [4:0] RdE;
     logic [31:0] ImmExtE;
-    logic [31:0] PCPlus4;
+    //logic [31:0] PCPlus4;
 
 
 
@@ -191,19 +191,12 @@ module top (
 
     execute execute1(
 
-        .RegWriteE(RegWriteE),
-        .ResultSrcE(ResultSrcE),
-        .MemWriteE(MemWriteE),
         .JumpE(JumpE),
         .BranchE(BranchE),
         .ALUControlE(ALUControlE),
         .ALUSrcAE(ALUSrcAE),
         .ALUSrcBE(ALUSrcBE),
-        .RD1E(RD1E),
-        .RD2E(RD2E),
         .PCE(PCE),
-        .Rs1E(Rs1E),
-        .Rs2E(Rs2E),
         .ImmExtE(ImmExtE),
         .SrcAE(SrcAE),
         .WriteDataE(WriteDataE),
@@ -284,7 +277,7 @@ module top (
     hazard_unit_top hazard_unit_top1(
 
         .Rs1E(Rs1E),
-        .Rs2E,
+        .Rs2E(Rs2E),
         .RdM(RdM),
         .RdW(RdW),
         .RegWriteW(RegWriteW),
