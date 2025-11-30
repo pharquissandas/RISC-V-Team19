@@ -1,45 +1,43 @@
 module fetch(
 
     input logic        clk,
-    input  logic       rst,
+    input logic        rst,
+    input logic        PCSrcE,
+    input logic [31:0] PCTargetE,
+    input logic [31:0] ImmExtE,
+    input logic [31:0] ALUResultE,
 
-    input logic PCSrcE,
-        
-    /* verilator lint_off UNUSED */
-    input  logic [31:0]    ALUResultE,
-    /* verilator lint_on UNUSED */
 
-    input logic [31:0] PCE,
-    input logic [31:0] ImmExtE, //immediate offset for branch target
-    input logic [31:0] PCPlus4F,
-
-    output logic [31:0] RD
-
+    output logic [31:0] InstrF,
+    output logic [31:0] PCF
 
 );
 
 
-pc pc_inst(
+logic [31:0] PCCurr;
+logic [31:0] PCPlus4F;
+logic [31:0] PCFNext;
+
+pc_pipeline pc_inst(
 
     .clk(clk),
     .rst(rst),
     .PCSrc(PCSrcE),
+    .ALUResult(ALUResultE),
+    .PCTarget(PCTargetE),
     .PCPlus4(PCPlus4F),
-    .ImmExt(ImmExtE),
-    .ALUResult(ALUResultE)
-    .PC()
-
-
-
+    .PC(PCCurr)
 
 );
 
 
-mux pcfmux();
+instr_mem instr_mem1(
 
+    .A(PCCurr),
 
+    .RD(InstrF)
 
-
+);
 
 
 endmodule
