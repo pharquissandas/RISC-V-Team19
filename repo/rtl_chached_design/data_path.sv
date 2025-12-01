@@ -45,7 +45,7 @@ module data_path (
         .RD(Instr)
     );
 
-    data_mem data_mem_inst(
+    memory_unit data_mem_inst(
         .clk(clk),
         .WE(MemWrite),
         .A(ALUResult),
