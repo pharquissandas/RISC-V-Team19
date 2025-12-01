@@ -88,8 +88,11 @@ public:
 
     void setData(const std::string &data_file)
     {
-        // Fill data.hex with program data
-        std::ignore = system(("cp " + data_file + " data.hex").c_str());
+        // Loads data from the middle of data memory to avoid overwriting program memory
+        // Create data.hex with initial empty contents
+        std::ignore = system("echo @10000 > data.hex");
+        // Append data contents to data.hex starting from address 0x10000
+        std::ignore = system(("cat " + data_file + " >> data.hex").c_str());
     }
 
 protected:

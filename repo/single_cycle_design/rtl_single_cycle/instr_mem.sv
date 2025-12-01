@@ -5,7 +5,7 @@ module instr_mem (
     /* verilator lint_on UNUSED */
 );
 
-    // instruction memory array: 256 instructions, each 32 bits wide
+    // instruction memory array: 4096 words of 32 bits each
     logic [31:0] rom_array [0:4095];
 
     // preload instructions from an external hex file at simulation start
