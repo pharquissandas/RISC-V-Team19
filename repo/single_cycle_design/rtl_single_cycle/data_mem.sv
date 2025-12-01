@@ -1,6 +1,6 @@
 module data_mem #(
     parameter XLEN = 32,
-    parameter ADDRESS_WIDTH = 16,
+    parameter ADDRESS_WIDTH = 17,
     parameter DATA_WIDTH = 8
 ) (
     input  logic clk,
@@ -12,7 +12,12 @@ module data_mem #(
     input  logic [2:0] AddressingControl, // funct3 to determine load/store type
     output logic [XLEN-1:0] RD // data read
 );
-    logic [DATA_WIDTH-1:0] ram_array [2**ADDRESS_WIDTH-1:0]; // 64KB data memory
+    logic [DATA_WIDTH-1:0] ram_array [2**ADDRESS_WIDTH-1:0]; // 128KB data memory
+
+    initial begin
+        // Load the data.hex file into memory at the start of simulation
+        $readmemh("data.hex", ram_array);
+    end
 
     logic [ADDRESS_WIDTH-1:0] addr;
     assign addr = A[ADDRESS_WIDTH-1:0]; // use lower ADDRESS_WIDTH bits of address
