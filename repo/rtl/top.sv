@@ -89,9 +89,9 @@ module top (
 
     logic [31:0] WriteDataE;
     logic [31:0] PCPlus4E;
-    /*verilator lint_off UNUSEDSIGNAL */
+    /*verilator lint_off UNUSED */
     logic [31:0] a0D;
-    /*verilator lint_on UNUSEDSIGNAL */
+    /*verilator lint_on UNUSED */
     logic        FEN;
     logic        DEN;      
     logic        RSTE;   
