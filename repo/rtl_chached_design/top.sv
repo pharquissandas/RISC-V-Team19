@@ -260,6 +260,7 @@ module top (
     memory_to_writeback_register mtwr(
 
         .clk(clk),
+        .rst(rst),
         .RegWriteM(RegWriteM),
         .ResultSrcM(ResultSrcM),
         .ALUResultM(ALUResultM),
