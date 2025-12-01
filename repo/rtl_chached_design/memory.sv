@@ -10,7 +10,7 @@ output logic [31:0] RDM
 
 );
 
-data_mem data_mem1(
+memory_unit data_mem1(
 
     .clk(clk),
     .WE(MemWriteM),
