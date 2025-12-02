@@ -8,7 +8,7 @@ module instr_mem (
 
     // preload instructions from an external hex file at simulation start
     initial begin
-        $readmemh("../rtl/program.hex", rom_array);
+        $readmemh("../rtl_pipelined/program.hex", rom_array);
     end
 
     // output the instruction corresponding to the PC address
