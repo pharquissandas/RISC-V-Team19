@@ -1,5 +1,3 @@
-// for 4096 byte capacity cache: 2048 byte per way, 512 sets, 9 bit set
-
 module memory_unit #(
     parameter XLEN = 32
 ) (
@@ -54,7 +52,7 @@ always_comb begin
 
 end
 
-data_mem main_mem_inst (
+data_mem data_mem_inst (
     .clk(clk),
     .WE(WE),
     .A(A),
@@ -64,13 +62,14 @@ data_mem main_mem_inst (
 );
 
 data_cache data_cache_inst (
-        .clk(clk),
-        .rst(rst),
-        .A(A),
-        .WD(WD),
-        .WE(WE),
-        .mem_rd_data(ram_out), // Pass RAM data to cache for refills
-        .cache_dout(cache_out)
-    );
+    .clk(clk),
+    .rst(rst),
+    .A(A),
+    .WD(WD),
+    .WE(WE),
+    .AddressingControl(AddressingControl),
+    .mem_rd_data(ram_out), // Pass RAM data to cache for refills
+    .cache_dout(cache_out)
+);
 
 endmodule
