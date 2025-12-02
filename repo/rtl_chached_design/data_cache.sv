@@ -1,3 +1,5 @@
+// for 4096 byte capacity cache: 2048 byte per way, 512 sets, 9 bit set
+
 module data_cache #(
     parameter XLEN = 32
 ) (
@@ -6,6 +8,7 @@ module data_cache #(
     input  logic [XLEN-1:0] A,
     input  logic [XLEN-1:0] WD,
     input  logic WE,
+    input  logic [2:0] AddressingControl,
     input  logic [31:0] mem_rd_data, // data read from main mem
     output logic [31:0] cache_dout // data out to cpu
 );
@@ -30,10 +33,8 @@ logic hit0; // way 0 hit
 logic hit1; // way 1 hit
 logic hit;
 
-logic [31:0] mem_rd_data;
-//logic [31:0] ram_write;
-//logic ram_write_en;
-
+logic [31:0] result; // result after SB SH SW logic
+logic [1:0] byte_offset;
 // clear cache valid bits on startup
 initial begin
     for (int i = 0; i < 512; i++) begin
@@ -47,6 +48,7 @@ end
 
 assign tag = A[31:11];
 assign set = A[10:2];
+assign byte_offset = A[1:0];
 
 assign hit0 = v_way0[set] && (tag_way0[set] == tag);
 assign hit1 = v_way1[set] && (tag_way1[set] == tag);
@@ -70,29 +72,47 @@ always_ff @(posedge clk) begin
         end
     end
     else begin
-        // write: on a hit write to cache and set dirty bit true 
+        // write: on a hit write to cache and set dirty bit true
         if (WE) begin
+
+            // base result is the current cache line data for the hit way
+            if (hit0) result = data_way0[set];
+            else if (hit1) result = data_way1[set];
+            else result = 32'h0;
+
+            case (AddressingControl)
+                3'b000: begin // SB
+                    case (byte_offset)
+                        2'b00: result[7:0]   = WD[7:0];
+                        2'b01: result[15:8]  = WD[7:0];
+                        2'b10: result[23:16] = WD[7:0];
+                        2'b11: result[31:24] = WD[7:0];
+                    endcase
+                end
+                3'b001: begin // SH
+                    case (byte_offset[1]) // bit 1 determines lower or upper half
+                        1'b0: result[15:0]  = WD[15:0];
+                        1'b1: result[31:16] = WD[15:0];
+                    endcase
+                end
+                3'b010: result = WD; // SW
+                default: result = WD;
+            endcase
+
             if (hit0) begin
-                data_way0[set] <= WD;
+                data_way0[set] <= result;
                 u_bit[set]  <= 0;
                 d_way0[set] <= 1;
             end
             else if (hit1) begin
-                data_way1[set] <= WD;
+                data_way1[set] <= result;
                 u_bit[set]  <= 1;
                 d_way1[set] <= 1;
             end
         end
         // on a read miss, bring data from ram to cache
         else if (!hit && !WE) begin
-            ram_write_en <= 0;
-            if (u_bit[set] == 1) begin // 1 most recently used so load into 0
-
-                // if(d_way0[set] == 1) begin // write data from cache to memory before getting evicted 
-                //     ram_write_en <= 1;
-                //     ram_write <= data_way0[set];
-                // end
-                
+            if (u_bit[set] == 1) begin // 1 most recently used so load into 0                
                 data_way0[set] <= mem_rd_data;
                 tag_way0[set]  <= tag;
                 v_way0[set] <= 1;
@@ -100,12 +120,6 @@ always_ff @(posedge clk) begin
                 u_bit[set]  <= 0; // way 0 most recently used
             end
             else begin // 0 most recently used so load into 1
-
-                // if(d_way1[set] == 1) begin // write data from cache to memory before getting evicted 
-                //     ram_write_en <= 1;
-                //     ram_write <= data_way1[set];
-                // end
-
                 data_way1[set] <= mem_rd_data;
                 tag_way1[set]  <= tag;
                 v_way1[set] <= 1;
@@ -114,8 +128,8 @@ always_ff @(posedge clk) begin
             end
         end
         else if (hit && !WE) begin // read hit: update
-            if (hit0) u_bit[set] <= 1;
-            if (hit1) u_bit[set] <= 0;
+            if (hit0) u_bit[set] <= 0;
+            if (hit1) u_bit[set] <= 1;
         end
     end
 end
