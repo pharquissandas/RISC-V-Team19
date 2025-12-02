@@ -1,4 +1,6 @@
 // for 4096 byte capacity cache: 2048 byte per way, 512 sets, 9 bit set
+/* verilator lint_off BLKSEQ */
+/* verilator lint_off SYNCASYNCNET */
 
 module data_cache #(
     parameter XLEN = 32
@@ -107,8 +109,8 @@ always_ff @(posedge clk) begin
             u_bit [i] = 0;
             d_way0[i] = 0;
             d_way1[i] = 0;
-            stalling0 = 0;
-            stalling1 = 0;
+            stalling0 <= 0;
+            stalling1 <= 0;
         end
     end
     else begin
@@ -198,3 +200,6 @@ always_ff @(posedge clk) begin
 end
 
 endmodule
+
+/* verilator lint_on SYNCASYNCNET */
+/* verilator lint_on BLKSEQ */
