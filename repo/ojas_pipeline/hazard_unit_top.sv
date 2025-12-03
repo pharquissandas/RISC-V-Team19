@@ -27,35 +27,6 @@ module hazard_unit_top(
 
 );
 
-//when we have a lw instruction in exectution stage the ResultSrcE = 01
-//this is when we stall the fetch and decode stages (for next cycle) to avoid
-//lw data hazard
-//also if ResultSrcE = 10 then we are also changing the PC so flush
-//execution and decode
-
-// always_comb begin
-
-//     case(ResultSrcE)
-        
-//         default: begin 
-//             FEN = 1; 
-//             DEN = 1;
-//         end
-//         2'b00: begin 
-//             FEN = 1; 
-//             DEN = 1;
-//         end
-//         2'b01: begin
-//              FEN = 0; 
-//              DEN = 0;
-//         end
-//         2'b10: begin
-//             FEN = 1; 
-//             DEN = 1;
-//         end
-//     endcase
-// end
-
 logic [1:0] selAE;
 logic [1:0] selBE;
 
