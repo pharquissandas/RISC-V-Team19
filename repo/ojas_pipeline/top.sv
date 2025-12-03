@@ -5,19 +5,8 @@ module top (
 );
 
     assign a0 = a0D;
-    // Control signals
-    logic [1:0] PCSrcE;
-    /*logic       RegWrite;
-    logic [3:0] ALUControl;
-    logic       ALUSrcA;
-    logic       ALUSrcB;
-    logic       MemWrite;
-    logic [1:0] ResultSrc;
-    logic [2:0] ImmSrc;
-    logic [2:0] AddressingControl;
 
-    // Datapath outputs
-    logic        Zero;*/
+    logic [1:0] PCSrcE;
     logic [31:0] InstrF;
     logic [31:0] InstrD;
     logic [31:0] PCTargetE;
@@ -64,11 +53,6 @@ module top (
     logic [4:0] Rs2E;
     logic [4:0] RdE;
     logic [31:0] ImmExtE;
-    //logic [31:0] PCPlus4;
-
-
-
-
     logic RegWriteM;
     logic [1:0] ResultSrcM;
     logic MemWriteM;
@@ -78,20 +62,13 @@ module top (
     logic [4:0] RdM;
     logic [31:0] PCPlus4M;
     logic [31:0] RDM;
-
-
     logic [1:0] ResultSrcW;
-
     logic [31:0] ALUResultW;
     logic [31:0] ReadDataW;
-
     logic [31:0] PCPlus4W;
-
     logic [31:0] WriteDataE;
     logic [31:0] PCPlus4E;
-    /*verilator lint_off UNUSED */
     logic [31:0] a0D;
-    /*verilator lint_on UNUSED */
     logic        FEN;
     logic        DEN;      
     logic        RSTE;   
