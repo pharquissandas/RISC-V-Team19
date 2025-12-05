@@ -3,9 +3,12 @@ module fetch_to_decode_register(
     input logic clk,
     input logic en,
     input logic rst,
-    input logic [31:0] PCF,
-    input logic [31:0] PCPlus4F,
-    input logic [31:0] InstrF,
+    input logic [31:0] PCF1,
+    input logic [31:0] PCPlus4F1,
+    input logic [31:0] InstrF1,
+    input logic [31:0] PCF2,
+    input logic [31:0] PCPlus4F2,
+    input logic [31:0] InstrF2,
 
     input logic predict_taken_F,
 

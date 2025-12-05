@@ -1,7 +1,8 @@
 module top (
     input logic clk,
     input logic rst,
-    output logic [31:0] a0
+    output logic [31:0] a0,
+    output logic [31:0] a1
 );
     logic predict_taken_F;
     logic predict_taken_D;
@@ -24,10 +25,12 @@ module top (
         .clk(clk),
         .rst(rst),
         .fetch_pc_i(PCF),
-        .predict_taken_o(predict_taken_F),
         .execute_pc_i(PCE),
         .execute_is_branch_i(execute_is_branch_E),
-        .execute_branch_taken_i(execute_branch_taken_E)
+        .execute_branch_taken_i(execute_branch_taken_E),
+        
+        .predict_taken_o(predict_taken_F)
+
     );
 
 // Fetch
@@ -44,9 +47,12 @@ module top (
         .pc_predict_redirect_i(pc_predict_redirect_D),
         .predicted_target_pc_i(predicted_target_pc_D),
         
-        .InstrF(InstrF),
-        .PCF(PCF),
-        .PCPlus4F(PCPlus4F)
+        .InstrF1(InstrF1),
+        .PCF1(PCF1),
+        .PCPlus4F1(PCPlus4F1),
+        .InstrF2(InstrF2),
+        .PCF2(PCF2),
+        .PCPlus4F2(PCPlus4F2)
     );
 
 // Fetch to Decode Register
@@ -58,9 +64,12 @@ module top (
         .clk(clk),
         .en(~StallDecode),
         .rst(FlushDecode),
-        .PCF(PCF),
-        .PCPlus4F(PCPlus4F),
-        .InstrF(InstrF),
+        .PCF1(PCF1),
+        .PCPlus4F1(PCPlus4F1),
+        .InstrF1(InstrF1),
+        .PCF2(PCF2),
+        .PCPlus4F2(PCPlus4F2),
+        .InstrF2(InstrF2),
         .predict_taken_F(predict_taken_F),
 
         .PCD(PCD),

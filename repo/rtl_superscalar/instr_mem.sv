@@ -1,8 +1,10 @@
 module instr_mem (
     /* verilator lint_off UNUSED */
-    input logic [31:0] A,
+    input logic [31:0] A1,
+    input logic [31:0] A2,
     /* verilator lint_on UNUSED */
-    output logic [31:0] RD
+    output logic [31:0] RD1,
+    output logic {31:0} RD2
 );
 
     // instruction memory array: 4096 words of 32 bits each
@@ -14,5 +16,6 @@ module instr_mem (
     end
 
     // output the instruction corresponding to the PC address
-    assign RD = rom_array[A[13:2]];
+    assign RD1 = rom_array[A1[13:2]];
+    assing RD2 = rom_array[A2[13:2]];
 endmodule
