@@ -5,7 +5,7 @@ module branch_predictor(
     input logic [31:0] execute_pc_i,
     input logic execute_is_branch_i,
     input logic execute_branch_taken_i,
-    output logic predict_taken_o,
+    output logic predict_taken_o
 );
 
 localparam BHT_SIZE = 64;

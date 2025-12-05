@@ -27,7 +27,7 @@ module hazard_unit(
     output logic FlushDecode,
     output logic FlushWriteback,
     
-    output logic pc_redirect_o,
+    output logic pc_redirect_o
 );
 
 always_comb begin
@@ -40,6 +40,7 @@ always_comb begin
     FlushExecute  = 1'b0;
     FlushDecode   = 1'b0;
     FlushWriteback= 1'b0;
+    pc_redirect_o = 1'b0;
 
     if(Rs1E == 5'b0) // register x0 is never forwarded
         ForwardAE = 2'b00;
@@ -77,7 +78,7 @@ always_comb begin
     else if (PCSrcE != 2'b00) begin
         FlushDecode = 1'b1;
         FlushExecute = 1'b1;
-        pc_redirect_o = 1'b1;
+        // pc_redirect_o = 1'b1;
     end
 
     // load-use hazard (data hazard)
