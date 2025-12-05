@@ -33,7 +33,7 @@ module decode(
 
 //Connections for extend block
     logic [2:0] ImmSrcD;
-    logic [31:0] calculated_BTA_D
+    logic [31:0] calculated_BTA_D;
     assign calculated_BTA_D = PCD + ImmExtD;
     assign predicted_target_pc_D = calculated_BTA_D;
     assign pc_predict_redirect_D = predict_taken_D && BranchD;

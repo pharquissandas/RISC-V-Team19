@@ -65,7 +65,7 @@ module top (
 
         .PCD(PCD),
         .PCPlus4D(PCPlus4D),
-        .InstrD(InstrD)
+        .InstrD(InstrD),
         .predict_taken_D(predict_taken_D)
     );
 
@@ -227,7 +227,7 @@ module top (
         .WriteDataE   (WriteDataE),
         .PCSrcE       (PCSrcE),
         .ALUResultE   (ALUResultE),
-        .PCTargetE    (PCTargetE)
+        .PCTargetE    (PCTargetE),
 
         .branch_mispredict_o(branch_mispredict_E),
         .execute_is_branch_o(execute_is_branch_E),
