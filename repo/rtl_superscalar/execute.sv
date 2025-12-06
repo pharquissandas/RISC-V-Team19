@@ -1,38 +1,45 @@
 module execute(
-    input logic [1:0]  JumpE,
-    input logic        BranchE,
-    input logic [3:0]  ALUControlE,
-    input logic        ALUSrcAE,
-    input logic        ALUSrcBE,
-    input logic [2:0]  BranchTypeE,
+    input logic [1:0]  JumpE1,
+    input logic        BranchE1,
+    input logic [3:0]  ALUControlE1,
+    input logic        ALUSrcAE1,
+    input logic        ALUSrcBE1,
+    input logic [2:0]  BranchTypeE1,
+    input logic [1:0]  JumpE2,
+    input logic        BranchE2,
+    input logic [3:0]  ALUControlE2,
+    input logic        ALUSrcAE2,
+    input logic        ALUSrcBE2,
+    input logic [2:0]  BranchTypeE2,
 
-    input logic predict_taken_i,
 
-    input logic [31:0] ResultW,
-    input logic [31:0] ALUResultM,
+    input logic [31:0] ResultW1,
+    input logic [31:0] ALUResultM1,
+    input logic [31:0] ResultW2,
+    input logic [31:0] ALUResultM2,
     input logic [31:0] RD1E,
     input logic [31:0] RD2E,
+    input logic [31:0] RD4E,
+    input logic [31:0] RD5E,
 
     input logic [1:0] ForwardAE,
     input logic [1:0] ForwardBE,
 
-    input logic [31:0] PCE,
-    input logic [31:0] ImmExtE,
+    input logic [31:0] PCE1,
+    input logic [31:0] PCE2,
+    input logic [31:0] ImmExtE1,
+    input logic [31:0] ImmExtE2,
 
     output logic [31:0] WriteDataE,
     output logic [1:0]  PCSrcE,
     output logic [31:0] ALUResultE,
-    output logic [31:0] PCTargetE,
-
-    output logic branch_mispredict_o,
-    output logic execute_is_branch_o,
-    output logic execute_branch_taken_o,
-    output logic [31:0] mispredict_target_pc_o
+    output logic [31:0] PCTargetE
 );
 
-    logic ZeroE;
+    logic ZeroE1;
+    logic ZeroE2;
     logic [31:0] SrcB, SrcA;
-    logic [31:0] SrcBE, SrcAE;
+    logic [31:0] SrcBE1, SrcAE1. SrcAE2,SrcBE2;
 
     always_comb begin
         case (ForwardAE)
@@ -52,31 +59,47 @@ module execute(
         SrcAE = ALUSrcAE ? PCE : SrcA;
         SrcBE = ALUSrcBE ? ImmExtE : SrcB;
 
-        PCTargetE  = PCE + ImmExtE;
-        WriteDataE = SrcB;
+        PCTargetE1  = PCE1 + ImmExtE1;
+        PCTargetE2  = PCE2 + ImmExtE2;
+
+        WriteDataE1 = SrcB;
     end
 
     alu alu_inst1 (
-        .SrcA (SrcAE),
-        .SrcB (SrcBE),
-        .ALUControl (ALUControlE),
-        .ALUResult (ALUResultE),
-        .Zero (ZeroE)
+        .SrcA (SrcAE1),
+        .SrcB (SrcBE1),
+        .ALUControl (ALUControlE1),
+        
+        .ALUResult (ALUResultE1),
+        .Zero (ZeroE1)
     );
 
     alu alu_inst2(
+        .SrcA(SrcAE2),
+        .SrcB(SrcBE2),
+        .ALUControl(ALUControlE2),
 
-
-
+        .ALUResult(ALUResultE2),
+        .zero(ZeroE2)
 
     );
 
-    pcsrc_unit pcsrc_unit_inst (
-        .Jump (JumpE),
-        .Branch (BranchE),
-        .Zero(ZeroE),
-        .BranchType (BranchTypeE),
-        .PCSrc (PCSrcE)
+    pcsrc_unit pcsrc_unit_inst1 (
+        .Jump (JumpE1),
+        .Branch (BranchE1),
+        .Zero(ZeroE1),
+        .BranchType (BranchTypeE1),
+        
+        .PCSrc (PCSrcE1)
+    );
+
+    pcsrc_unit pcsrc_unit_inst2 (
+        .Jump (JumpE2),
+        .Branch (BranchE2),
+        .Zero(ZeroE2),
+        .BranchType (BranchTypeE2),
+        
+        .PCSrc (PCSrcE2)
     );
 
     // branch prediction and bht update signals

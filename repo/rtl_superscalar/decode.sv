@@ -4,7 +4,6 @@ module decode(
     input logic [31:0] InstrD2, //instruction to decode from pipeline 2
     input logic [31:0] PCD1,
     input logic [31:0] PCD2,
-    input logic predict_taken_D,
     input logic [31:0] ResultW1, //write data for pipeline 1 
     input logic [31:0] ResultW2, //write data for pipeline 2
     input logic [4:0] RdW1, // destination register address for pipeline 1
@@ -25,7 +24,6 @@ module decode(
     output logic [4:0] Rs5D,
     output logic [4:0] RdD1, //destination register for pipeline 1
     output logic [4:0] RdD2, //destination register for pipeline 2
-
     output logic        RegWriteD1,
     output logic [1:0]  ResultSrcD1,
     output logic        MemWriteD1,
@@ -36,9 +34,16 @@ module decode(
     output logic        ALUSrcBD1,
     output logic        ALUSrcAD1,
     output logic [2:0]  AddressingControlD1,
-    output logic pc_predict_redirect_D,
-    output logic [31:0] predicted_target_pc_D,
-
+    output logic        RegWriteD2,
+    output logic [1:0]  ResultSrcD2,
+    output logic        MemWriteD2,
+    output logic [1:0]  JumpD2,
+    output logic        BranchD2,
+    output logic [2:0]  BranchTypeD2,
+    output logic [3:0]  ALUControlD2,
+    output logic        ALUSrcBD2,
+    output logic        ALUSrcAD2,
+    output logic [2:0]  AddressingControlD2,
     output logic [31:0] a0,
     output logic [31:0] a1
 );
@@ -46,10 +51,6 @@ module decode(
 //Connections for extend block
     logic [2:0] ImmSrcD1;
     logic [2:0] ImmSrcD2;
-    logic [31:0] calculated_BTA_D;
-    assign calculated_BTA_D = PCD + ImmExtD;
-    assign predicted_target_pc_D = calculated_BTA_D;
-    assign pc_predict_redirect_D = predict_taken_D && BranchD;
 
     always_comb begin
         Rs1D = InstrD1[19:15];
@@ -71,20 +72,31 @@ module decode(
         .ALUSrcA(ALUSrcAD1),
         .ALUSrcB(ALUSrcBD1),
         .MemWrite(MemWriteD1),
-        .Branch(BranchD),
-        .BranchType(BranchTypeD), 
-        .Jump(JumpD),
+        .Branch(BranchD1),
+        .BranchType(BranchTypeD1), 
+        .Jump(JumpD1),
         .ImmSrc(ImmSrcD1),
-        .AddressingControl(AddressingControlD),
-        .ResultSrc(ResultSrcD)
+        .AddressingControl(AddressingControlD1),
+        .ResultSrc(ResultSrcD1)
     );
 
     control control_inst2(
 
+        .opcode(InstrD2[6:0]),
+        .funct3(InstrD2[14:12]),
+        .funct7(InstrD2[31:25]),
 
-
-
-
+        .RegWrite(RegWriteD2),
+        .ALUControl(ALUControlD2),
+        .ALUSrcA(ALUSrcAD2),
+        .ALUSrcB(ALUSrcBD2),
+        .MemWrite(MemWriteD2),
+        .Branch(BranchD2),
+        .BranchType(BranchTypeD2), 
+        .Jump(JumpD2),
+        .ImmSrc(ImmSrcD2),
+        .AddressingControl(AddressingControlD2),
+        .ResultSrc(ResultSrcD2)
 
     );
 

@@ -58,10 +58,14 @@ end
 
 data_mem data_mem_inst (
     .clk(clk),
-    .WE(wr_en),
-    .A(ram_addr),
-    .WD(ram_in),
-    .RD(ram_out)
+    .WE1(wr_en),
+    .A1(ram_addr),
+    .WE2(),
+    .A2(), 
+    .WD1(ram_in),
+    .RD1(ram_out),
+    .WD2(),
+    .RD2()
 );
 
 data_cache data_cache_inst (

@@ -7,18 +7,26 @@ module memory_to_writeback_register(
     input logic RegWriteM,
     input logic [1:0] ResultSrcM,
 
-    input logic [31:0] ALUResultM,
-    input logic [31:0] ReadDataM,
-    input logic [4:0] RdM,
-    input logic [31:0] PCPlus4M,
+    input logic [31:0] ALUResultM1,
+    input logic [31:0] ReadDataM1,
+    input logic [4:0] RdM1,
+    input logic [31:0] PCPlus4M1,
+    input logic [31:0] ALUResultM2,
+    input logic [31:0] ReadDataM2,
+    input logic [4:0] RdM2,
+    input logic [31:0] PCPlus4M2,
 
     output logic RegWriteW,
     output logic [1:0] ResultSrcW,
 
-    output logic [31:0] ALUResultW,
-    output logic [31:0] ReadDataW,
-    output logic [4:0] RdW,
-    output logic [31:0] PCPlus4W
+    output logic [31:0] ALUResultW1,
+    output logic [31:0] ReadDataW1,
+    output logic [4:0] RdW1,
+    output logic [31:0] PCPlus4W1,
+    output logic [31:0] ALUResultW2,
+    output logic [31:0] ReadDataW2,
+    output logic [4:0] RdW2,
+    output logic [31:0] PCPlus4W2
 );
 
     always_ff @(posedge clk) begin

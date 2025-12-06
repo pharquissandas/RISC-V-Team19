@@ -5,10 +5,13 @@ module memory (
     input logic [2:0] AddressingControlM,
     input logic MemWriteM,
 
-    input logic [31:0] ALUResultM,
-    input logic [31:0] WriteDataM,
+    input logic [31:0] ALUResultM1,
+    input logic [31:0] ALUResultM2,
+    input logic [31:0] WriteDataM1,
+    input logic [31:0] WriteDataM2,
 
-    output logic [31:0] ReadDataM,
+    output logic [31:0] ReadDataM1,
+    output logic [31:0] ReadDataM2,
     output logic CacheStall
 
 );
