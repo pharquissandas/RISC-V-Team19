@@ -41,7 +41,9 @@ module hazard_unit(
     output logic StallFetch2,    
     output logic StallDecode2,
     output logic FlushDecode2,
-    output logic FlushExecute2
+    output logic FlushExecute2,
+
+    output logic StallPipeline2
 
     
 );
@@ -119,5 +121,13 @@ always_comb begin
         FlushExecute2 = 1'b1;
     end
 end
+
+always_comb begin
+
+    if()
+
+
+end
+
 
 endmodule
