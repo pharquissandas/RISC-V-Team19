@@ -28,7 +28,7 @@
 ### Contribution Table
 |              | Contributions                 | Preet              | Mikhail          | Ojas                     | Fangnan          |
 | ------------ | ----------------------------- | ------------------ | ---------------- | ------------------------ | ---------------- |
-| Lab 4        | Program Counter               |                    |         X        |                          |                  |
+| Reduced RISC-V CPU | Program Counter               |                    |         X        |                          |                  |
 |              | ALU                           |                    |                  |             X            |                  |
 |              | Register File                 |                    |                  |             X            |                  |
 |              | Instruction Memory            |         X          |                  |                          |                  |
@@ -36,7 +36,7 @@
 |              | Sign Extend                   |         X          |                  |                          |                  |
 |              | Testbench                     |                    |                  |                          |        X         |
 |              | Topfile/implementation        |                    |        X         |                          |        X         |
-| Single Cycle | ALU (refactor)                |        X           |        X         |                          |                  |
+| Single-Cycle RV32I Design | ALU (refactor)                |        X           |        X         |                          |                  |
 |              | Control Path                  |                    |                  |            X             |                  |
 |              | Control Unit (refactor)       |        X           |       X          |                          |                  |
 |              | Data Memory                   |                    |       X          |                          |        X         |
@@ -48,17 +48,16 @@
 |              | Sign Extend (refactor)        |                    |       X          |                          |                  |
 |              | Topfile/implementation        |         X          |       X          |                          |                  |
 |              | Testbenches                   |         X          |                  |                          |                  |
-| Pipelining   | Pipeline Registers            |         X          |                  |                          |                  |
+| Pipelined RV32I Design | Pipeline Registers            |         X          |                  |                          |                  |
 |              | Pipeline Stages               |         X          |                  |                          |       X          |
 |              | Hazard Unit                   |         X          |                  |                          |       X          |
-| Cache        | Memory (refactor)             |                    |       X          |                          |                  |
+| Adding Data Memory Cache | Memory (refactor)             |                    |       X          |                          |                  |
 |              | Direct mapped cache           |                    |       X          |                          |                  |
 |              | Two-way set associative cache |                    |       X          |                          |                  |
 | Full RV32I Design | All testbenches          |        X           |                  |                          |                  |
 | Full RV32I Design | Module Refactoring       |        X           |       X          |                          |        X         |
 | Other        | F1                            |                    |                  |                          |        X         |
 |              | Branch Predictor              |        X           |                  |                          |                  |
-|              | Unit Testing                  |        X           |                  |                          |                  |
 |              | Vbuddy                        |        X           |                  |                          |                  |
 |              | FPGA                          |                    |       X          |                          |                  |
 |              | Superscalar                   |                    |                  |             X            |                  |
