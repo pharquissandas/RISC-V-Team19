@@ -12,6 +12,9 @@
 - [Personal Statement Ojas Parikh](https://github.com/pharquissandas/RISC-V-T19/blob/main/docs/Personal%20Statement%20-%20Ojas%20Parikh.md)
 - [Personal Statement Fangnan Tan](https://github.com/pharquissandas/RISC-V-T19/blob/main/docs/Personal%20Statement%20-%20Fangnan%20Tan.md)
 
+## Overview of Repository
+
+
 ## Table of Contents
 
 ## Important Notes
@@ -23,7 +26,7 @@
 ## Overview
 
 ### Contribution Table
-|              |                               | Preet              | Mikhail          | Ojas                     | Fangnan          |
+|              | Contributions                 | Preet              | Mikhail          | Ojas                     | Fangnan          |
 | ------------ | ----------------------------- | ------------------ | ---------------- | ------------------------ | ---------------- |
 | Lab 4        | Program Counter               |                    |         X        |                          |                  |
 |              | ALU                           |                    |                  |             X            |                  |
