@@ -41,7 +41,7 @@
 |              | Control Unit (refactor)       |        X           |       X          |                          |                  |
 |              | Data Memory                   |                    |       X          |                          |        X         |
 |              | Data Path                     |                    |                  |                          |        X         |
-|              | Instruction Memory (refactor) |        X           |       X          |                          |                  |
+|              | Instruction Memory (refactor) |                    |       X          |                          |                  |
 |              | Program Counter (refactor)    |                    |                  |                          |        X         |
 |              | PCSRC Unit                    |                    |                  |                          |        X         |
 |              | Register File (refactor)      |                    |                  |            X             |                  |
@@ -56,7 +56,7 @@
 |              | Two-way set associative cache |                    |       X          |                          |                  |
 | Full RV32I Design | All testbenches          |        X           |                  |                          |                  |
 | Full RV32I Design | Module Refactoring       |        X           |       X          |                          |        X         |
-| Other        | F1                            |                    |                  |                          |        X         |
+| Other        | F1                            |        X           |                  |                          |        X         |
 |              | Branch Predictor              |        X           |                  |                          |                  |
 |              | Vbuddy                        |        X           |                  |                          |                  |
 |              | FPGA                          |                    |       X          |                          |                  |
