@@ -123,7 +123,6 @@ The team successfully implemented the **Single-Cycle RV32I Design** and achieved
 | | Register File (refactor) | | | X | |
 | | Sign Extend (refactor) | | X | | |
 | | Topfile/implementation | X | X | | |
-| | Testbenches | X | | | |
 | **Pipelined RV32I** | Pipeline Registers | X | | | |
 | | Pipeline Stages | X | | | X |
 | | Hazard Unit (Detection/Forwarding) | X | | | X |
