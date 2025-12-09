@@ -31,7 +31,6 @@ module fetch(
 
     instr_mem instr_mem_inst(
         .A(PCF),
-        .RD(InstrF),
-        .clk(clk)
+        .RD(InstrF)
     );
 endmodule
