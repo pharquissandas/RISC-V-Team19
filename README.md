@@ -56,6 +56,7 @@ The highest level of achievement successfully verified is the **Cached Pipelined
     * The reference **`pdf.asm`** program (evidence below).
     * All five verification programs in the `tb/asm` folder.
 3.  **Data Cache:** The implementation uses a **2-way set-associative data cache** with a capacity of **4096 bytes** (1k words) and LRU replacement.
+4.  **Final Verification Status:** The **PDF calculation program** is now fully verified and correctly plots all four reference data distributions (`gaussian`, `noisy`, `triangle`, `sine`).
 
 ---
 
@@ -80,20 +81,22 @@ The process requires switching to the target branch and building the processor m
 3.  **Build the Processor Model:**
     *This step compiles the source code in `rtl/` into the simulation environment.*
     ```bash
-    ./build.sh  # Use the name of your specific build script (eg ./doit.sh, ./f1.sh, ./gaussian.sh, ./triangle.sh, ./noisy.sh)
+    ./build.sh # Use the name of your specific build script (e.g., ./doit.sh, ./f1.sh, ./pdf.sh)
     ```
 
 ### 2. Available Test Commands
 
 The following shell scripts in the `tb` directory are used to run all verification programs and generate the required evidence.
 
+> **Note on PDF Testing:** The individual distribution scripts (`gaussian.sh`, `triangle.sh`, etc.) have been consolidated into a single, flexible script, **`pdf.sh`**, which takes the data file as an argument. The commands below reflect the final, consolidated method.
+
 | Command | Behaviour | Deliverable Requirement |
 | :--- | :--- | :--- |
 | `./doit.sh` | Runs **all** the required verification test benches (e.g., from `tb/tests`) to ensure the processor passes the **five mandated tests**. | **Required** (Verification of 5 tests) |
 | `./f1.sh` | Runs the **`f1-lights`** program. The successful execution must be captured as video evidence. | **Required** (F1 program evidence) |
-| `./gaussian.sh` | Executes the program and plots the **`gaussian`** graph. | Evidence / Demonstration |
-| `./triangle.sh` | Executes the program and plots the **`triangle`** graph. | Evidence / Demonstration |
-| `./noisy.sh` | Executes the program and plots the **`noisy`** graph. | Evidence / Demonstration |
+| `./pdf.sh reference/gaussian.mem` | Executes the `pdf.asm` program using the Gaussian data and plots the **bell-shaped** distribution. | Evidence / Demonstration |
+| `./pdf.sh reference/triangle.mem` | Executes the `pdf.asm` program using the Triangle data and plots the **uniform or U-shaped** distribution. | Evidence / Demonstration |
+| `./pdf.sh reference/noisy.mem` | Executes the `pdf.asm` program using the Noisy data and plots the **complex/multi-peaked** distribution. | Evidence / Demonstration |
 
 ---
 
@@ -141,24 +144,27 @@ The team successfully implemented the **Single-Cycle RV32I Design** and achieved
 
 ## Proof Of Working CPU on Vbuddy:
 
-*(Evidence is taken from the fully functional Pipelined + Cache design on the **`cached`** branch)*
+*(Evidence is taken from the fully functional single cycle CPU design on the **`main`** branch)*
 
-### **Reference Program: `pdf.asm`**
-Successfully ran the probability distribution function program.
-
-
+### 5 Provided Tests Working Successfully
+<img width="322" height="173" alt="Main 5 tests" src="https://github.com/user-attachments/assets/fd46dd9f-f6e0-4623-8481-5a9af2511253" />
 
 ### **F1 Starting Light Program**
-Link to video (Showing the F1 lights sequence completing successfully)
+
+https://github.com/user-attachments/assets/9c69964b-9c96-41d7-82af-60f78d530877
 
 ### **Gaussian Test Program**
-Link to video (Showing output/Vbuddy result)
+
+https://github.com/user-attachments/assets/083d5ed6-ff7d-4312-b4f4-cccd1e04fcd2
+
 
 ### **Noisy Test Program**
-Link to video (Showing output/Vbuddy result)
+
+https://github.com/user-attachments/assets/446d3311-f56d-46c1-8dbb-3546735eb4c2
 
 ### **Triangle Test Program**
-Link to video (Showing output/Vbuddy result)
+
+https://github.com/user-attachments/assets/36910acf-f13f-4513-99b6-7941ee567041
 
 ### **FPGA Implementation**
 Link to video (Demonstrating operation on the FPGA platform using the **`fpga`** branch code)
