@@ -1,6 +1,5 @@
 module memory (
     input logic clk,
-    input logic rst,
     
     input logic [2:0] AddressingControlM1,
     input logic [2:0] AddressingControlM2,

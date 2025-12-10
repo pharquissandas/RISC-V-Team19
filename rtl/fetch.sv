@@ -1,7 +1,8 @@
 module fetch(
     input logic clk,
     input logic rst,
-    input logic en,
+    input logic en1,
+    input logic en2,
     input logic [1:0] PCSrcE1,
     input logic [31:0] PCTargetE1,
     input logic [31:0] ALUResultE1,
@@ -35,7 +36,8 @@ module fetch(
     pc_spsc pc_spsc_inst(
         .clk(clk),
         .rst(rst),
-        .en(en),
+        .en1(en1),
+        .en2(en2),
         .PCSrcE1(PCSrcE1),
         .ALUResultE1(ALUResultE1),
         .PCTargetE1(PCTargetE1),

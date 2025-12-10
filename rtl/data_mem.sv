@@ -8,8 +8,8 @@ module data_mem #(
     input  logic WE2, // write enable
     // verilator lint_off UNUSED
     input  logic [XLEN-1:0] A1, // memory address
-    // verilator lint_on UNUSED
     input  logic [XLEN-1:0] A2, // memory address
+    // verilator lint_on UNUSED
     input  logic [XLEN-1:0] WD1, // data to write
     input  logic [XLEN-1:0] WD2, // data to write
     input  logic [2:0] AddressingControl1, // funct3 to determine load/store type
@@ -27,11 +27,14 @@ module data_mem #(
 
     logic [ADDRESS_WIDTH-1:0] addr1;
     logic [ADDRESS_WIDTH-1:0] addr2;
-    logic conflict = 1'b0;
+    logic conflict;
     assign addr1 = A1[ADDRESS_WIDTH-1:0]; // use lower ADDRESS_WIDTH bits of address
     assign addr2 = A2[ADDRESS_WIDTH-1:0]; // use lower ADDRESS_WIDTH bits of address
 
     always_comb begin 
+
+        conflict = 1'b0;
+
 
         if(WE1 && WE2)begin
                     if (addr1 == addr2) // if both instructions are trying to write the same location in memory we only write the result of the later instruction

@@ -2,8 +2,6 @@ module decode(
     input logic        clk, 
     input logic [31:0] InstrD1, //instruction to decode from pipeline 1
     input logic [31:0] InstrD2, //instruction to decode from pipeline 2
-    input logic [31:0] PCD1,
-    input logic [31:0] PCD2,
     input logic [31:0] ResultW1, //write data for pipeline 1 
     input logic [31:0] ResultW2, //write data for pipeline 2
     input logic [4:0] RdW1, // destination register address for pipeline 1
@@ -144,6 +142,8 @@ module decode(
         .clk(clk),
         .RdD1(RdD1),
         .RdD2(RdD2),
+        .BranchD1(BranchD1),
+        .BranchD2(BranchD2),
    
         .StallPipeline2(StallPipeline2),
         .StallPipeline1NC(StallPipeline1NC)

@@ -19,7 +19,8 @@ module top (
     fetch fetch_inst (
         .clk(clk),
         .rst(rst),
-        .en(~StallFetch1),
+        .en1(~StallFetch1),
+        .en2 (~StallFetch2),
         .PCSrcE1(PCSrcE1),
         .PCTargetE1(PCTargetE1),
         .ALUResultE1(ALUResultE1),
@@ -120,9 +121,6 @@ module top (
         .RdW2(RdW2),
         .RegWriteW1(RegWriteW1),
         .RegWriteW2(RegWriteW2),
-
-        .PCD1(PCD1),
-        .PCD2(PCD2),
 
         .RD1D(RD1D),
         .RD2D(RD2D),
@@ -431,9 +429,8 @@ module top (
     logic [31:0] ReadDataM2;
 
     memory memory_inst (
-        // clock & rst
+        // clock
         .clk              (clk),
-        .rst              (rst),
         // inputs from Execute-to-Memory register
         .AddressingControlM1 (AddressingControlM1),
         .AddressingControlM2 (AddressingControlM2),
@@ -527,11 +524,11 @@ module top (
     );
 
 // Hazard Unit
-    logic [1:0] ForwardAE1; //these are select inputs for muxes, 00 means no forwarding, 01 means forwarding of result in writeback stage, 10 means forwarding of result from ALU in memory stage
-    logic [1:0] ForwardBE1;  //these are select inputs for muxes
+    logic [2:0] ForwardAE1; //these are select inputs for muxes, 00 means no forwarding, 01 means forwarding of result in writeback stage, 10 means forwarding of result from ALU in memory stage
+    logic [2:0] ForwardBE1;  //these are select inputs for muxes
 
-    logic [1:0] ForwardAE2; //these are select inputs for muxes, 00 means no forwarding, 01 means forwarding of result in writeback stage, 10 means forwarding of result from ALU in memory stage
-    logic [1:0] ForwardBE2;  //these are select inputs for muxes
+    logic [2:0] ForwardAE2; //these are select inputs for muxes, 00 means no forwarding, 01 means forwarding of result in writeback stage, 10 means forwarding of result from ALU in memory stage
+    logic [2:0] ForwardBE2;  //these are select inputs for muxes
 
     logic StallDecode1;
     logic StallFetch1;
@@ -573,11 +570,15 @@ module top (
         .RegWriteM1   (RegWriteM1),
         .RegWriteW2   (RegWriteW2),
         .RegWriteM2   (RegWriteM2),
+        .PCE1(PCE1),
+        .PCE2(PCE2),
 
         .ResultSrcE1  (ResultSrcE1),
         .ResultSrcE2  (ResultSrcE2),
         .PCSrcE1      (PCSrcE1),
         .PCSrcE2      (PCSrcE2),
+        .BranchD1(BranchD1),
+        .BranchD2(BranchD2),
 
         // outputs to control forwarding & stalling
         .ForwardAE1   (ForwardAE1),

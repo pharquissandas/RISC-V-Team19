@@ -3,6 +3,7 @@ module pcsrc_unit (
     input  logic       Branch,
     input  logic       Zero,
     input  logic [2:0] BranchType,
+    
     output logic [1:0] PCSrc // control the source for the next PC value (00 = PC+4, 01 = PC + imm(branch/jal), 10 = ALUResult (jalr))
 );
 

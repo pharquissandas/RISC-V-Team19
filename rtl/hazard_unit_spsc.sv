@@ -28,25 +28,17 @@ module hazard_unit(
     input logic [1:0] PCSrcE2, //to identify control hazards in execute stage
 
 
-    input logic BranchD1,
-    input logic BranchD2,
+    input logic BranchD1;
+    input logic BranchD2;
 
     input logic [31:0] PCE1,//use the PC values to determine
     input logic [31:0] PCE2,// which branch instruction should be taken if branches in both pipelines
 
+    output logic [1:0] ForwardAE1, //these are select inputs for muxes, 00 means no forwarding, 01 means forwarding of result in writeback stage, 10 means forwarding of result from ALU in memory stage
+    output logic [1:0] ForwardBE1,  //these are select inputs for muxes
 
-    //Forward outputs: 000 = no forwardin,
-    //001 forwarding from writeback stage pipeline 1,
-    //010 forwarding from alu result in memory stage in pipeline 1
-    //011 forwarding from writeback stage pipeline 2,
-    //100 forwarding from alu result in memory stage in pipeline 2
-
-
-    output logic [2:0] ForwardAE1, //these are select inputs for muxes, 00 means no forwarding, 01 means forwarding of result in writeback1 stage, 10 means forwarding of result from ALU in memory stage
-    output logic [2:0] ForwardBE1,  //these are select inputs for muxes
-
-    output logic [2:0] ForwardAE2, //these are select inputs for muxes, 00 means no forwarding, 01 means forwarding of result in writeback stage, 10 means forwarding of result from ALU in memory stage
-    output logic [2:0] ForwardBE2,  //these are select inputs for muxes
+    output logic [1:0] ForwardAE2, //these are select inputs for muxes, 00 means no forwarding, 01 means forwarding of result in writeback stage, 10 means forwarding of result from ALU in memory stage
+    output logic [1:0] ForwardBE2,  //these are select inputs for muxes
 
     output logic StallFetch1,    
     output logic StallDecode1,
@@ -75,14 +67,14 @@ module hazard_unit(
 always_comb begin
     BranchIn1      = 1'b0;
     BranchIn2      = 1'b0;
-    ForwardAE1     = 3'b000;
-    ForwardBE1     = 3'b000;
+    ForwardAE1     = 2'b00;
+    ForwardBE1     = 2'b00;
     StallDecode1   = 1'b0;
     StallFetch1    = 1'b0;
     FlushExecute1  = 1'b0;
     FlushDecode1  = 1'b0;
-    ForwardAE2     = 3'b000;
-    ForwardBE2     = 3'b000;
+    ForwardAE2     = 2'b00;
+    ForwardBE2     = 2'b00;
     StallDecode2   = 1'b0;
     StallFetch2   = 1'b0;
     FlushExecute2  = 1'b0;
@@ -98,29 +90,17 @@ always_comb begin
 
 
 
-    if(BranchD1 && BranchD2)begin
-    
-        FlushDecode2 = 1'b1;
-        FlushExecute2 = 1'b1;
-        StallFetch2 = 1'b1;
-        StallDecode2 = 1'b1;
-
-        
-        //We also need to flush decode and fetch ? for both pipelines
-        //So that we execute the correct next instruction
-        //however if no branch taken
-        //we dont need to do this for both pipelines
-
+    if(BranchD1)begin
+        StallFetch2;
+        FlushDecode2;
+        StallExecute2;
 
     end
 
+
+
+
     if(PCSrcE1 != 2'b00 && PCSrcE2 != 2'b00)begin//branches in both pipelines
-
-        FlushDecode2 = 1'b1;
-        FlushExecute2 = 1'b1;
-
-        FlushDecode1 = 1'b1;
-        FlushExecute1 = 1'b1;
 
         if(PCE1 < PCE2) begin //take branch of Pipeline 1 and ignore branch result of pipeline 2
             
@@ -136,6 +116,30 @@ always_comb begin
 
     end
 
+
+    if(Rs1E == 5'b0) // register x0 is never forwarded
+        ForwardAE1 = 2'b00;
+    else if((Rs1E == RdM1) && RegWriteM1 && Rs1E != 0)
+        ForwardAE1 = 2'b10;
+    else if((Rs1E == RdW1) && RegWriteW1 && Rs1E != 0)
+        ForwardAE1 = 2'b01;
+
+    if(Rs2E == 5'b0) // register x0 is never forwarded
+        ForwardBE1 = 2'b00;
+    else if((Rs2E == RdM1) &&  RegWriteM1 && Rs2E != 0)
+        ForwardBE1 = 2'b10;
+    else if((Rs2E == RdW1) && RegWriteW1 && Rs2E != 0)
+        ForwardBE1 = 2'b01;
+
+    // unconditional jump control hazard (branch taken)
+
+    // load-use hazard (data hazard)
+    if (ResultSrcE1 == 2'b01 && (RdE1 != 0) && (RdE1 == Rs1D || RdE1 == Rs2D)) begin
+        StallDecode1 = 1'b1;
+        StallFetch1 = 1'b1;
+        FlushExecute1 = 1'b1;
+    end
+
     else if (PCSrcE1 != 2'b00) begin
         FlushDecode1 = 1'b1;
         FlushExecute1 = 1'b1;
@@ -148,6 +152,27 @@ always_comb begin
     end
 
 
+    if(Rs4E == 5'b0) // register x0 is never forwarded
+        ForwardAE2 = 2'b00;
+    else if((Rs4E == RdM2) && RegWriteM2 && Rs4E != 0)
+        ForwardAE2 = 2'b10;
+    else if((Rs4E == RdW2) && RegWriteW2 && Rs4E != 0)
+        ForwardAE2 = 2'b01;
+
+    if(Rs5E == 5'b0) // register x0 is never forwarded
+        ForwardBE2 = 2'b00;
+    else if((Rs5E == RdM2) &&  RegWriteM2 && Rs5E != 0)
+        ForwardBE2 = 2'b10;
+    else if((Rs5E == RdW2) && RegWriteW2 && Rs5E != 0)
+        ForwardBE2 = 2'b01;
+
+    // load-use hazard (data hazard)
+    if (ResultSrcE2 == 2'b01 && (RdE2 != 0) && (RdE2 == Rs4D || RdE2 == Rs5D)) begin
+        StallDecode2 = 1'b1;
+        StallFetch2 = 1'b1;
+        FlushExecute2 = 1'b1;
+    end
+    // unconditional jump control hazard (branch taken)
     else if (PCSrcE2 != 2'b00) begin
         FlushDecode2 = 1'b1;
         FlushExecute2 = 1'b1;
@@ -159,69 +184,29 @@ always_comb begin
 
     end
 
-
-    if(Rs1E == 5'b0) // register x0 is never forwarded
-        ForwardAE1 = 3'b000;
-    else if((Rs1E == RdM1) && RegWriteM1 && Rs1E != 0)
-        ForwardAE1 = 3'b010;
-    else if((Rs1E == RdW1) && RegWriteW1 && Rs1E != 0)
-        ForwardAE1 = 3'b001;
-    else if((Rs1E == RdM2) && RegWriteM2 && Rs1E != 0)
-        ForwardAE1 = 3'b011;
-    else if((Rs1E == RdW2) && RegWriteW2 && Rs1E != 0)
-        ForwardAE1 = 3'b100;
-
-    if(Rs2E == 5'b0) // register x0 is never forwarded
-        ForwardBE1 = 3'b000;
-    else if((Rs2E == RdM1) &&  RegWriteM1 && Rs2E != 0)
-        ForwardBE1 = 3'b010;
-    else if((Rs2E == RdW1) && RegWriteW1 && Rs2E != 0)
-        ForwardBE1 = 3'b001;
-    else if((Rs2E == RdM2) &&  RegWriteM2 && Rs2E != 0)
-        ForwardBE1 = 3'b011;
-    else if((Rs2E == RdW2) && RegWriteW2 && Rs2E != 0)
-        ForwardBE1 = 3'b100;
-
-    // unconditional jump control hazard (branch taken)
-
-    // load-use hazard (data hazard)
-    if (ResultSrcE1 == 2'b01 && (RdE1 != 0) && (RdE1 == Rs1D || RdE1 == Rs2D)) begin
-        StallDecode1 = 1'b1;
-        StallFetch1 = 1'b1;
-        FlushExecute1 = 1'b1;
-    end
-
-
-    if(Rs4E == 5'b0) // register x0 is never forwarded
-        ForwardAE2 = 3'b000;
-    else if((Rs4E == RdM2) && RegWriteM2 && Rs4E != 0)
-        ForwardAE2 = 3'b010;
-    else if((Rs4E == RdW2) && RegWriteW2 && Rs4E != 0)
-        ForwardAE2 = 3'b001;
-    else if((Rs4E == RdM1) && RegWriteM1 && Rs4E != 0)
-        ForwardAE2 = 3'b011;
-    else if((Rs4E == RdW1) && RegWriteW1 && Rs4E != 0)
-        ForwardAE2 = 3'b100;
-
-    if(Rs5E == 5'b0) // register x0 is never forwarded
-        ForwardBE2 = 3'b000;
-    else if((Rs5E == RdM2) &&  RegWriteM2 && Rs5E != 0)
-        ForwardBE2 = 3'b010;
-    else if((Rs5E == RdW2) && RegWriteW2 && Rs5E != 0)
-        ForwardBE2 = 3'b001;
-    else if((Rs5E == RdM1) &&  RegWriteM1 && Rs5E != 0)
-        ForwardBE2 = 3'b011;
-    else if((Rs5E == RdW1) && RegWriteW1 && Rs5E != 0)
-        ForwardBE2 = 3'b100;
-
-    // load-use hazard (data hazard)
-    if (ResultSrcE2 == 2'b01 && (RdE2 != 0) && (RdE2 == Rs4D || RdE2 == Rs5D)) begin
-        StallDecode2 = 1'b1;
-        StallFetch2 = 1'b1;
-        FlushExecute2 = 1'b1;
-    end
-    // unconditional jump control hazard (branch taken)
-
 end
 
 endmodule
+
+
+
+//Desired logic for branches:
+
+/*
+
+-In decode we identify we have a branch(es)
+-For case of one branch first, in pipeline 1 (same applies for one in p2 only):
+
+    -Allow the branch to execute by itself
+    -The instruction in p2 should not execute at the same time
+    -But which instruction to execute first? Well it should always be p1 no?
+
+
+
+
+
+
+
+
+
+*/

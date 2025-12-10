@@ -22,10 +22,10 @@ module execute(
     input logic [31:0] RD4E,
     input logic [31:0] RD5E,
 
-    input logic [1:0] ForwardAE1,
-    input logic [1:0] ForwardBE1,
-    input logic [1:0] ForwardAE2,
-    input logic [1:0] ForwardBE2,
+    input logic [2:0] ForwardAE1,
+    input logic [2:0] ForwardBE1,
+    input logic [2:0] ForwardAE2,
+    input logic [2:0] ForwardBE2,
 
     input logic [31:0] PCE1,
     input logic [31:0] PCE2,
@@ -50,16 +50,20 @@ module execute(
 
     always_comb begin
         case (ForwardAE1)
-            2'b00: SrcA1 = RD1E;
-            2'b01: SrcA1 = ResultW1;
-            2'b10: SrcA1 = ALUResultM1;
+            3'b000: SrcA1 = RD1E;
+            3'b001: SrcA1 = ResultW1;
+            3'b010: SrcA1 = ALUResultM1;
+            3'b011: SrcA1 = ALUResultM2;
+            3'b100: SrcA1 = ResultW2;
             default: SrcA1 = RD1E;
         endcase
 
         case (ForwardBE1)
-            2'b00: SrcB1 = RD2E;
-            2'b01: SrcB1 = ResultW1;
-            2'b10: SrcB1 = ALUResultM1;
+            3'b000: SrcB1 = RD2E;
+            3'b001: SrcB1 = ResultW1;
+            3'b010: SrcB1 = ALUResultM1;
+            3'b011: SrcB1 = ALUResultM2;
+            3'b100: SrcB1 = ResultW2;
             default: SrcB1 = RD2E;
         endcase
 
@@ -73,16 +77,20 @@ module execute(
 
     always_comb begin
         case (ForwardAE2)
-            2'b00: SrcA2 = RD4E;
-            2'b01: SrcA2 = ResultW2;
-            2'b10: SrcA2 = ALUResultM2;
+            3'b000: SrcA2 = RD4E;
+            3'b001: SrcA2 = ResultW2;
+            3'b010: SrcA2 = ALUResultM2;
+            3'b011: SrcA2 = ALUResultM1;
+            3'b100: SrcA2 = ResultW1;
             default: SrcA2 = RD4E;
         endcase
 
         case (ForwardBE2)
-            2'b00: SrcB2 = RD5E;
-            2'b01: SrcB2 = ResultW2;
-            2'b10: SrcB2 = ALUResultM2;
+            3'b000: SrcB2 = RD5E;
+            3'b001: SrcB2 = ResultW2;
+            3'b010: SrcB2 = ALUResultM2;
+            3'b011: SrcB2 = ALUResultM1;
+            3'b100: SrcB2 = ResultW1;
             default: SrcB2 = RD5E;
         endcase
 
