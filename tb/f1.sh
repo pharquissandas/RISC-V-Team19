@@ -1,6 +1,6 @@
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 TEST_FOLDER=$(realpath "$SCRIPT_DIR/tests")
-RTL_FOLDER=$(realpath "$SCRIPT_DIR/../rtl_single_cycle") #<-- change file path for different designs
+RTL_FOLDER=$(realpath "$SCRIPT_DIR/../rtl") #<-- change file path for different designs
 name="top"
 test_name="f1_tb"
 

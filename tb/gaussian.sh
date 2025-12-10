@@ -1,6 +1,6 @@
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 TEST_FOLDER=$(realpath "$SCRIPT_DIR/tests")
-RTL_FOLDER=$(realpath "$SCRIPT_DIR/../rtl_single_cycle")
+RTL_FOLDER=$(realpath "$SCRIPT_DIR/../rtl")
 name="top"
 test_name="gaussian_tb"
 
