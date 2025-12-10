@@ -12,7 +12,7 @@
 * [Important Notes and Critical Points](#important-notes-and-critical-points)
 * [Quick Start (Build and Run)](#quick-start-build-and-run)
 * [Overview of Achieved Goals](#overview-of-achieved-goals)
-    * [Contribution Table](#contribution-table)
+  * [Contribution Table](#contribution-table)
 * [Proof Of Working CPU on Vbuddy](#proof-of-working-cpu-on-vbuddy)
 
 ---
@@ -32,7 +32,7 @@ This repository is organized to contain all deliverables, separating source code
 
 | Directory | Content | Deliverable Requirement |
 | :--- | :--- | :--- |
-| **`rtl`** | All SystemVerilog source code for the processor. Different architectural versions (Single-Cycle, Pipelined, Cached, etc.) are managed using Git branches/tags. | **Required.** Includes `rtl/README.md` listing module authorship. |
+| **`rtl`** | All SystemVerilog source code for the processor. Different architectural versions (Single-Cycle, Pipelined, Cached, etc.) are managed using Git branches/tags. **Each branch contains a separate `rtl/README.md` which provides a detailed explanation of the CPU design specific to that branch (e.g., hazard control, pipeline stages, or cache design).** | **Required.** Includes `rtl/README.md` listing module authorship. |
 | **`tb`** | Testbench environment, including assembly programs, verification setup, and the **`Makefile`** for building/testing. | **Required.** Includes evidence and build automation. |
 | **`personal_statements`** | Individual reflection and contribution reports. | **Required.**|
 | **`README.md` (root)** | This joint team statement and project overview. | **Required.** |
@@ -146,8 +146,6 @@ The team successfully implemented the **Single-Cycle RV32I Design** and achieved
 ### **Reference Program: `pdf.asm`**
 Successfully ran the probability distribution function program.
 
-
-[Image of Probability Distribution Function Plot on Vbuddy Display]
 
 
 ### **F1 Starting Light Program**
