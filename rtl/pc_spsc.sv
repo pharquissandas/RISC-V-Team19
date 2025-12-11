@@ -104,12 +104,12 @@ always_ff @(posedge clk) begin
     //     PCF1 <= PCNext2 + 4;
     //     PCF2 <= PCNext2;
     // end
-    else if(StallPipeline2) begin
-        PCF2 <= PCF2;
-    end
-    else if(StallPipeline1NC)begin
-        PCF1 <= PCF1;
-    end
+    // else if(StallPipeline2) begin
+    //     PCF2 <= PCF2;
+    // end
+    // else if(StallPipeline1NC)begin
+    //     PCF1 <= PCF1;
+    // end
     else begin
 
         if (en1) begin

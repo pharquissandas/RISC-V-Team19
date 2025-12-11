@@ -1,5 +1,6 @@
 module decode(
     input logic        clk, 
+    input logic        rst,
     input logic [31:0] InstrD1, //instruction to decode from pipeline 1
     input logic [31:0] InstrD2, //instruction to decode from pipeline 2
     input logic [31:0] ResultW1, //write data for pipeline 1 
@@ -144,6 +145,7 @@ module decode(
         .RdD2(RdD2),
         .BranchD1(BranchD1),
         .BranchD2(BranchD2),
+        .rst(rst),
    
         .StallPipeline2(StallPipeline2),
         .StallPipeline1NC(StallPipeline1NC)

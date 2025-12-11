@@ -1,6 +1,7 @@
 module dependencies_unit(
     
     input clk,
+    input rst,
     input [4:0] RdD1,
     input [4:0] RdD2,
     input logic BranchD1,
@@ -13,6 +14,10 @@ module dependencies_unit(
     output logic StallPipeline1NC
 
 );
+
+
+    assign StallPipeline1NC = 1'b0;
+    assign StallPipeline2 = 1'b0;
    //PCNextNew1 = PCD2
         //PCNextNew2 = PCF2 -> implement with MUX in fetch stage 
         //StallPipeline1NC = 1'b1;//cycle after p2 is stalled we stall p1 and let p2 run
@@ -36,28 +41,61 @@ module dependencies_unit(
     // end
 
  
- 
+
 //havent considered dependency between source and destination registers in different pipelines, 
 
-always_comb begin
-
-    StallPipeline2 = 1'b0;
 
 
-    if((RdD1 == RdD2) && !(BranchD1 || BranchD2) && !(RdD1 == 0 || RdD2 == 0))
-        StallPipeline2 = 1'b1; // with a dependency we stall pipeline 2 first allow p1 to run
-     
-end
+
+//When we identify dependency
+//Delay execution in pipeline 2 by one cycle
+//Flush pipeline2?
+//We need to flush pipeline 1 in that cycle?
+//
+
+/*
+//If (dependency) begin
+    
+    StallExecute2;
+    StallDecode1;
+    StallDecode2;
+    StallFetch1;
+    StallFetch2;
+
+    On next cycle:
+
+    No stalls everything flows again
+    It should be we only ahve pipeline 2 in execute stage
 
 
-always_ff @(posedge clk)begin
 
-    if(StallPipeline2)
-        StallPipeline1NC <= 1'b1;
-    else
-        StallPipeline1NC <= 1'b0;
+//end
+*/
 
-end
 
+
+
+
+
+
+// always_ff @(negedge clk)begin
+
+//     if((RdD1 == RdD2) && !(BranchD1 || BranchD2) && !(RdD1 == 0 || RdD2 == 0))
+//         StallPipeline2 <= 1'b1; // with a dependency we stall pipeline 2 first allow p1 to run
+//     else
+//         StallPipeline2 <= 1'b0;
+
+// end
+
+// always_ff @(negedge clk + 2)begin
+
+//     if(StallPipeline2) begin
+//         StallPipeline1NC <=1'b1;
+//     end
+//     else begin
+//         StallPipeline1NC <= 1'b0;
+//     end
+
+// end
 
 endmodule

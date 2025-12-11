@@ -35,12 +35,8 @@ module data_mem #(
 
         conflict = 1'b0;
 
-
-        if(WE1 && WE2)begin
-                    if (addr1 == addr2) // if both instructions are trying to write the same location in memory we only write the result of the later instruction
-                        //but this should never occur if we have handled dependencies correctly before
-                        conflict = 1'b1;
-        end
+        if(WE1 && WE2 && (addr1 == addr2))
+            conflict = 1'b1;
 
     end
 

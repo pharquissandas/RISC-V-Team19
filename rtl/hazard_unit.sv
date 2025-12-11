@@ -31,6 +31,10 @@ module hazard_unit(
     input logic BranchD1,
     input logic BranchD2,
 
+    input [4:0] RdD1,
+    input [4:0] RdD2,
+
+
     input logic [31:0] PCE1,//use the PC values to determine
     input logic [31:0] PCE2,// which branch instruction should be taken if branches in both pipelines
 
@@ -65,6 +69,8 @@ module hazard_unit(
     output logic StallExecute2,
     output logic StallMemory1,
     output logic StallMemory2,
+    output logic FlushMemory1,
+    output logic FlushMemory2,
     output logic StallWriteback1,
     output logic StallWriteback2,
     output logic FlushWriteback1,
@@ -91,13 +97,66 @@ always_comb begin
     StallExecute2 = 1'b0;
     StallMemory1 = 1'b0;
     StallMemory2 = 1'b0;
+    FlushMemory1 = 1'b0;
+    FlushMemory2 = 1'b0;
     StallWriteback1 = 1'b0;
     StallWriteback2 = 1'b0;
     FlushWriteback1 = 1'b0;
     FlushWriteback2 = 1'b0;
+    
+
+
+    //Dependcy unit is not correct, we need to stop execution if dependency is recognised in decode stage
+    //so flush execute? 
+    //but then we need to execute the instruction taht was halted the cycle immediately after
+///I THINK STALLPIPELINE NEEDS TO STALL EVERY STAGE
+//in dependey uunit igonre if everything is 0s so we dont stall forever
+
+
+//Need to account for dependency between source and destinationr egisters in same cycle between p1 and p2
+
+    /*if((Rs1D == RdD2 || Rs2D == RdD2) && !(RdD2 == 0)) begin
+
+        StallExecute1 = 1'b1;
+        StallDecode1 = 1'b1;
+        StallDecode2 = 1'b1; //needed?
+        StallFetch1 = 1'b1;
+        StallFetch2 = 1'b1;
+        FlushDecode1 = 1'b1;
+        FlushExecute2 = 1'b1;
+
+    end*/
+
+    if((Rs4D == RdD1 || Rs5D == RdD1) && !(RdD1 == 0))begin
+
+        StallExecute2 = 1'b1;
+        StallDecode2 = 1'b1; 
+        StallDecode1 = 1'b1;    //needed?
+        StallFetch1 = 1'b1; 
+        StallFetch2 = 1'b1;
+        FlushDecode1 = 1'b1;
+        FlushExecute2 = 1'b1;
+
+    end
+
+
+    if((RdD1 == RdD2) && !(BranchD1 || BranchD2) && !(RdD1 == 0 || RdD2 == 0))begin
+
+        StallExecute2 = 1'b1;
+        StallDecode1 = 1'b1;
+        StallDecode2 = 1'b1;
+        StallFetch1 = 1'b1;
+        StallFetch2 = 1'b1;
+        FlushDecode1 = 1'b1;
+        FlushExecute2 = 1'b1;
+    
+    end
 
 
 
+
+
+    
     if(BranchD1 && BranchD2)begin
     
         FlushDecode2 = 1'b1;
@@ -137,11 +196,15 @@ always_comb begin
     end
 
     else if (PCSrcE1 != 2'b00) begin
+
+        StallFetch1 = 1'b1;
         FlushDecode1 = 1'b1;
         FlushExecute1 = 1'b1;
 
+        StallFetch2 = 1'b1;
         FlushDecode2 = 1'b1;
         FlushExecute2 = 1'b1;
+        FlushMemory2 = 1'b1;
 
         BranchIn1 = 1'b1;
 
@@ -149,11 +212,14 @@ always_comb begin
 
 
     else if (PCSrcE2 != 2'b00) begin
-        FlushDecode2 = 1'b1;
-        FlushExecute2 = 1'b1;
-
+        
+        StallFetch1 = 1'b1;
         FlushDecode1 = 1'b1;
         FlushExecute1 = 1'b1;
+
+        StallFetch2 = 1'b1;
+        FlushDecode2 = 1'b1;
+        FlushExecute2 = 1'b1;
 
         BranchIn2 = 1'b1;
 
@@ -164,10 +230,10 @@ always_comb begin
         ForwardAE1 = 3'b000;
     else if((Rs1E == RdM1) && RegWriteM1 && Rs1E != 0)
         ForwardAE1 = 3'b010;
-    else if((Rs1E == RdW1) && RegWriteW1 && Rs1E != 0)
-        ForwardAE1 = 3'b001;
     else if((Rs1E == RdM2) && RegWriteM2 && Rs1E != 0)
         ForwardAE1 = 3'b011;
+    else if((Rs1E == RdW1) && RegWriteW1 && Rs1E != 0)
+        ForwardAE1 = 3'b001;
     else if((Rs1E == RdW2) && RegWriteW2 && Rs1E != 0)
         ForwardAE1 = 3'b100;
 
@@ -175,10 +241,10 @@ always_comb begin
         ForwardBE1 = 3'b000;
     else if((Rs2E == RdM1) &&  RegWriteM1 && Rs2E != 0)
         ForwardBE1 = 3'b010;
-    else if((Rs2E == RdW1) && RegWriteW1 && Rs2E != 0)
-        ForwardBE1 = 3'b001;
     else if((Rs2E == RdM2) &&  RegWriteM2 && Rs2E != 0)
         ForwardBE1 = 3'b011;
+    else if((Rs2E == RdW1) && RegWriteW1 && Rs2E != 0)
+        ForwardBE1 = 3'b001;
     else if((Rs2E == RdW2) && RegWriteW2 && Rs2E != 0)
         ForwardBE1 = 3'b100;
 
@@ -191,15 +257,21 @@ always_comb begin
         FlushExecute1 = 1'b1;
     end
 
+    if(ResultSrcE1 == 2'b01 && (RdE1 != 0) && (RdE1 == Rs4D || RdE1 == Rs5D)) begin
+        StallDecode2 = 1'b1;
+        StallFetch2 = 1'b1;
+        FlushExecute2 = 1'b1;
+    end
+
 
     if(Rs4E == 5'b0) // register x0 is never forwarded
         ForwardAE2 = 3'b000;
     else if((Rs4E == RdM2) && RegWriteM2 && Rs4E != 0)
         ForwardAE2 = 3'b010;
-    else if((Rs4E == RdW2) && RegWriteW2 && Rs4E != 0)
-        ForwardAE2 = 3'b001;
     else if((Rs4E == RdM1) && RegWriteM1 && Rs4E != 0)
         ForwardAE2 = 3'b011;
+    else if((Rs4E == RdW2) && RegWriteW2 && Rs4E != 0)
+        ForwardAE2 = 3'b001;
     else if((Rs4E == RdW1) && RegWriteW1 && Rs4E != 0)
         ForwardAE2 = 3'b100;
 
@@ -207,10 +279,10 @@ always_comb begin
         ForwardBE2 = 3'b000;
     else if((Rs5E == RdM2) &&  RegWriteM2 && Rs5E != 0)
         ForwardBE2 = 3'b010;
-    else if((Rs5E == RdW2) && RegWriteW2 && Rs5E != 0)
-        ForwardBE2 = 3'b001;
     else if((Rs5E == RdM1) &&  RegWriteM1 && Rs5E != 0)
         ForwardBE2 = 3'b011;
+    else if((Rs5E == RdW2) && RegWriteW2 && Rs5E != 0)
+        ForwardBE2 = 3'b001;
     else if((Rs5E == RdW1) && RegWriteW1 && Rs5E != 0)
         ForwardBE2 = 3'b100;
 
@@ -220,8 +292,13 @@ always_comb begin
         StallFetch2 = 1'b1;
         FlushExecute2 = 1'b1;
     end
-    // unconditional jump control hazard (branch taken)
+    if (ResultSrcE2 == 2'b01 && (RdE2 != 0) &&  (RdE2 == Rs1D || RdE2 == Rs2D)) begin
 
+        StallDecode1 = 1'b1;
+        StallFetch1 = 1'b1;
+        FlushExecute1  = 1'b1;
+
+    end
 end
 
 endmodule

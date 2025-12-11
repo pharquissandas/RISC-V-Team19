@@ -19,8 +19,8 @@ module top (
     fetch fetch_inst (
         .clk(clk),
         .rst(rst),
-        .en1(~StallFetch1),
-        .en2 (~StallFetch2),
+        .en1(~(StallFetch1 || StallPipeline1NC)),
+        .en2 (~(StallFetch2 || StallPipeline2)),
         .PCSrcE1(PCSrcE1),
         .PCTargetE1(PCTargetE1),
         .ALUResultE1(ALUResultE1),
@@ -50,9 +50,9 @@ module top (
 
     fetch_to_decode_register fetch_to_decode_register_inst(
         .clk(clk),
-        .en1(~StallDecode1),
+        .en1(~(StallDecode1 || StallPipeline1NC) && ~rst), //added reset condition to make sure dependency unit doesnt  stall CPU permanently
         .rst1(FlushDecode1),
-        .en2(~StallDecode2),
+        .en2(~(StallDecode2 || StallPipeline2) && ~rst),
         .rst2(FlushDecode2),
         .PCF1(PCF1),
         .PCPlus8F1(PCPlus8F1),
@@ -113,6 +113,7 @@ module top (
 
     decode decode_inst (
         .clk(clk),
+        .rst(rst),
         .InstrD1(InstrD1),
         .InstrD2(InstrD2),
         .ResultW1(ResultW1),
@@ -205,9 +206,9 @@ module top (
         // clock & reset
         .clk              (clk),
         .rst1             (FlushExecute1),
-        .en1              (~StallExecute1),
+        .en1              (~(StallExecute1 || StallPipeline1NC)),
         .rst2             (FlushExecute2),
-        .en2              (~StallExecute2),
+        .en2              (~(StallExecute2 || StallPipeline2)),
 
         // control signals from Control.sv
         .RegWriteD1        (RegWriteD1),
@@ -379,6 +380,8 @@ module top (
         .clk               (clk),
         .en1               (~StallMemory1),
         .en2               (~StallMemory2),
+        .rst1              (FlushMemory1),
+        .rst2              (FlushMemory2),
 
         // inputs from Execute stage
         .RegWriteE1         (RegWriteE1),
@@ -549,6 +552,8 @@ module top (
     logic FlushWriteback2;
     logic BranchIn1;
     logic BranchIn2;
+    logic FlushMemory1;
+    logic FlushMemory2;
 
     hazard_unit hazard_unit_inst (
         // inputs from Decode & Execute stage
@@ -579,6 +584,8 @@ module top (
         .PCSrcE2      (PCSrcE2),
         .BranchD1(BranchD1),
         .BranchD2(BranchD2),
+        .RdD1(RdD1),
+        .RdD2(RdD2),
 
         // outputs to control forwarding & stalling
         .ForwardAE1   (ForwardAE1),
@@ -602,6 +609,8 @@ module top (
         .FlushDecode2 (FlushDecode2),
         .FlushWriteback1 (FlushWriteback1),
         .FlushWriteback2 (FlushWriteback2),
+        .FlushMemory1(FlushMemory1),
+        .FlushMemory2(FlushMemory2),
 
         .BranchIn1(BranchIn1),
         .BranchIn2 (BranchIn2)

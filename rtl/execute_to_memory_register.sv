@@ -3,6 +3,8 @@ module execute_to_memory_register (
     input logic clk,
     input logic en1,
     input logic en2,
+    input logic rst1,
+    input logic rst2,
 
     input logic RegWriteE1,
     input logic [1:0] ResultSrcE1,
@@ -46,7 +48,22 @@ module execute_to_memory_register (
 
 );
     always_ff @(posedge clk) begin
-        if (en1) begin
+        
+        if (rst1) begin
+
+            RegWriteM1          <= 1'b0;
+            ResultSrcM1         <= 2'b0;
+            MemWriteM1          <= 1'b0;
+            AddressingControlM1 <= 3'b0;
+
+            ALUResultM1   <= 32'b0;
+            WriteDataM1   <= 32'b0;
+            RdM1          <= 5'b0;
+            PCPlus8M1     <= 32'b0;
+
+        end
+            
+        else if (en1) begin
             RegWriteM1          <= RegWriteE1;
             ResultSrcM1         <= ResultSrcE1;
             MemWriteM1          <= MemWriteE1;
@@ -58,7 +75,23 @@ module execute_to_memory_register (
             PCPlus8M1     <= PCPlus8E1;
 
         end
-        if(en2) begin
+
+        if (rst2) begin
+
+            RegWriteM2          <= 1'b0;
+            ResultSrcM2         <= 2'b0;
+            MemWriteM2          <= 1'b0;
+            AddressingControlM2 <= 3'b0;
+
+            ALUResultM2   <= 32'b0;
+            WriteDataM2   <= 32'b0;
+            RdM2          <= 5'b0;
+            PCPlus8M2     <= 32'b0;
+
+        end
+
+
+        else if(en2) begin
 
             RegWriteM2          <= RegWriteE2;
             ResultSrcM2         <= ResultSrcE2;
