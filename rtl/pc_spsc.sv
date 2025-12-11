@@ -15,7 +15,8 @@ module pc_spsc #(
     input  logic [WIDTH-1:0]    ALUResultE1,
 
     /* verilator lint_on UNUSED */
-    output logic [WIDTH-1:0]    PCPlus8F1, // PC + 4
+    output logic [WIDTH-1:0]    PCPlus4F1, // PC + 4
+    output logic [WIDTH-1:0]    PCPlus8F1, // PC + 8
     output logic [WIDTH-1:0]    PCF1,      // current program counter
 
 //Pipeline 2:
@@ -31,13 +32,10 @@ module pc_spsc #(
 
     /* verilator lint_on UNUSED */
 
-    input logic StallPipeline2,
-    input logic StallPipeline1NC,
-
     input logic BranchIn1,
     input logic BranchIn2,
-
-    output logic [WIDTH-1:0]    PCPlus8F2, // PC + 4
+    output logic [WIDTH-1:0]    PCPlus4F2, // PC + 4
+    output logic [WIDTH-1:0]    PCPlus8F2, // PC + 8
     output logic [WIDTH-1:0]    PCF2      // current program counter
 );
 
@@ -51,8 +49,11 @@ logic [WIDTH-1:0] PCNext2;
 
 
 always_comb begin
+   
     PCPlus8F1 = PCF1 + 8;
     PCPlus8F2 = PCF2 + 8;
+    PCPlus4F1 = PCF1 + 4;
+    PCPlus4F2 = PCF2 + 4;
 
     if(PCSrcE1 == 2'b00 && PCSrcE2 == 2'b01)begin
 
@@ -76,6 +77,18 @@ always_comb begin
 
         PCNext1 = PCTargetE1;
         PCNext2 = PCTargetE1 + 4;
+
+    end
+    else if (PCSrcE1 == 2'b10) begin
+
+        PCNext1 = {ALUResultE1[31:2], 2'b00};
+        PCNext2 = PCNext1  +4;
+
+    end
+    else if (PCSrcE2 == 2'b10) begin
+
+        PCNext2 = {ALUResultE2[31:2], 2'b00};
+        PCNext1 = PCNext2 + 4;
 
     end
     else begin // need to implement JAL

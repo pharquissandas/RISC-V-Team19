@@ -20,6 +20,10 @@ module execute_to_memory_register (
     input logic [31:0] WriteDataE1,
     input logic [4:0] RdE1,
     input logic [31:0] PCPlus8E1,
+        
+    input logic [31:0]    PCPlus4E2, // PC + 4
+    input logic [31:0]    PCPlus4E1, // PC + 4
+
 
 
     input logic [31:0] ALUResultE2,
@@ -43,6 +47,8 @@ module execute_to_memory_register (
     output logic [31:0] WriteDataM2,
     output logic [4:0] RdM1,
     output logic [4:0] RdM2,
+    output logic [31:0]    PCPlus4M1, // PC + 4
+    output logic [31:0]    PCPlus4M2, // PC + 4
     output logic [31:0] PCPlus8M1,
     output logic [31:0] PCPlus8M2
 
@@ -60,6 +66,8 @@ module execute_to_memory_register (
             WriteDataM1   <= 32'b0;
             RdM1          <= 5'b0;
             PCPlus8M1     <= 32'b0;
+            PCPlus4M1     <= 32'b0;
+
 
         end
             
@@ -73,6 +81,8 @@ module execute_to_memory_register (
             WriteDataM1   <= WriteDataE1;
             RdM1          <= RdE1;
             PCPlus8M1     <= PCPlus8E1;
+            PCPlus4M1     <= PCPlus4E1;
+
 
         end
 
@@ -87,6 +97,8 @@ module execute_to_memory_register (
             WriteDataM2   <= 32'b0;
             RdM2          <= 5'b0;
             PCPlus8M2     <= 32'b0;
+            PCPlus4M2     <= 32'b0;
+
 
         end
 
@@ -102,6 +114,7 @@ module execute_to_memory_register (
             WriteDataM2   <= WriteDataE2;
             RdM2          <= RdE2;
             PCPlus8M2     <= PCPlus8E2;
+            PCPlus4M2     <= PCPlus4E2;
 
         end
 

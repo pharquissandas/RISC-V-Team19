@@ -18,8 +18,10 @@ module fetch(
     output logic [31:0] InstrF2,
     output logic [31:0] PCF1,
     output logic [31:0] PCPlus8F1,
+    output logic [31:0] PCPlus4F1,
     output logic [31:0] PCF2,
-    output logic [31:0] PCPlus8F2
+    output logic [31:0] PCPlus8F2,
+    output logic [31:0] PCPlus4F2
 );
 
     always_comb begin
@@ -42,13 +44,13 @@ module fetch(
         .PCSrcE2(PCSrcE2),
         .ALUResultE2(ALUResultE2),
         .PCTargetE2(PCTargetE2),
-        .StallPipeline2(StallPipeline2),
-        .StallPipeline1NC(StallPipeline1NC),
         .BranchIn1(BranchIn1),
         .BranchIn2(BranchIn2),
 
         .PCF1(PCF1_IN),
         .PCF2(PCF2_IN),
+        .PCPlus4F1(PCPlus4F1),
+        .PCPlus4F2(PCPlus4F2),
         .PCPlus8F1(PCPlus8F1),
         .PCPlus8F2(PCPlus8F2)
     );

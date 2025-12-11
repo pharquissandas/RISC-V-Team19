@@ -45,6 +45,10 @@ module decode_to_execute_register(
     input logic [31:0] ImmExtD2,
     input logic [31:0] PCPlus8D1,
     input logic [31:0] PCPlus8D2,
+    input logic [31:0]    PCPlus4D1, // PC + 4
+    input logic [31:0]    PCPlus4D2, // PC + 4
+
+
 
     output logic RegWriteE1,
     output logic [1:0] ResultSrcE1,
@@ -82,6 +86,8 @@ module decode_to_execute_register(
     output logic [4:0] RdE2,
     output logic [31:0] ImmExtE1,
     output logic [31:0] ImmExtE2,
+    output logic [31:0]    PCPlus4E1, // PC + 4
+    output logic [31:0]    PCPlus4E2, // PC + 4
     output logic [31:0] PCPlus8E1,
     output logic [31:0] PCPlus8E2
 );
@@ -108,6 +114,7 @@ module decode_to_execute_register(
             RdE1 <= 5'b0;
             ImmExtE1 <= 32'b0;
             PCPlus8E1 <= 32'b0;
+            PCPlus4E1 <= 32'b0;
 
         end
 
@@ -133,6 +140,8 @@ module decode_to_execute_register(
             RdE1 <= RdD1;
             ImmExtE1 <= ImmExtD1;
             PCPlus8E1 <= PCPlus8D1;
+            PCPlus4E1 <= PCPlus4D1;
+
         end
     end
 
@@ -160,6 +169,8 @@ module decode_to_execute_register(
             RdE2 <= 5'b0;
             ImmExtE2 <= 32'b0;
             PCPlus8E2 <= 32'b0;
+            PCPlus4E2 <= 32'b0;
+
 
         end
 
@@ -184,6 +195,8 @@ module decode_to_execute_register(
             RdE2 <= RdD2;
             ImmExtE2 <= ImmExtD2;
             PCPlus8E2 <= PCPlus8D2;
+            PCPlus4E2 <= PCPlus4D2;
+
         end
 
 

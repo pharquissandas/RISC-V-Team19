@@ -7,10 +7,12 @@ module top (
 
     logic [31:0] InstrF1;
     logic [31:0] PCF1;
+    logic [31:0] PCPlus4F1;
     logic [31:0] PCPlus8F1;
 
     logic [31:0] InstrF2;
     logic [31:0] PCF2;
+    logic [31:0] PCPlus4F2;
     logic [31:0] PCPlus8F2;
 
 
@@ -35,6 +37,8 @@ module top (
         .PCPlus8F1(PCPlus8F1),
         .InstrF2(InstrF2),
         .PCF2(PCF2),
+        .PCPlus4F1(PCPlus4F1),
+        .PCPlus4F2(PCPlus4F2),
         .PCPlus8F2(PCPlus8F2)
     );
 
@@ -43,6 +47,8 @@ module top (
     logic [31:0] PCD2;
     logic [31:0] PCPlus8D1;
     logic [31:0] PCPlus8D2;
+    logic [31:0] PCPlus4D1;
+    logic [31:0] PCPlus4D2;
     logic [31:0] InstrD1;
     logic [31:0] InstrD2;
 
@@ -58,12 +64,16 @@ module top (
         .PCF2(PCF2),
         .PCPlus8F2(PCPlus8F2),
         .InstrF2(InstrF2),
+        .PCPlus4F1(PCPlus4F1),
+        .PCPlus4F2(PCPlus4F2),
 
         .PCD1(PCD1),
         .PCD2(PCD2),
         .PCPlus8D1(PCPlus8D1),
         .PCPlus8D2(PCPlus8D2),
         .InstrD1(InstrD1),
+        .PCPlus4D1(PCPlus4D1),
+        .PCPlus4D2(PCPlus4D2),
         .InstrD2(InstrD2)
 
     );
@@ -196,6 +206,8 @@ module top (
     logic [31:0] ImmExtE2;
     logic [31:0] PCPlus8E1;
     logic [31:0] PCPlus8E2;
+    logic [31:0] PCPlus4E1;
+    logic [31:0] PCPlus4E2;
 
     decode_to_execute_register decode_to_execute_register_inst (
         // clock & reset
@@ -247,6 +259,8 @@ module top (
         .ImmExtD2         (ImmExtD2),
         .PCPlus8D1         (PCPlus8D1),
         .PCPlus8D2         (PCPlus8D2),
+        .PCPlus4D1(PCPlus4D1),
+        .PCPlus4D2(PCPlus4D2),
 
         // outputs to Execute stage
         .RegWriteE1        (RegWriteE1),
@@ -285,6 +299,8 @@ module top (
         .RdE2             (RdE2),
         .ImmExtE1         (ImmExtE1),
         .ImmExtE2         (ImmExtE2),
+        .PCPlus4E1(PCPlus4E1),
+        .PCPlus4E2(PCPlus4E2),
         .PCPlus8E1         (PCPlus8E1),
         .PCPlus8E2         (PCPlus8E2)
     );
@@ -369,6 +385,8 @@ module top (
     logic [4:0] RdM2;
     logic [31:0] PCPlus8M2;
 
+    logic [31:0] PCPlus4M1;
+    logic [31:0] PCPlus4M2;
 
     execute_to_memory_register execute_to_memory_register_inst (
         // clock
@@ -399,6 +417,9 @@ module top (
         .RdE2               (RdE2),
         .PCPlus8E2          (PCPlus8E2),
 
+        .PCPlus4E1(PCPlus4E1),
+        .PCPlus4E2(PCPlus4E2),
+
         // outputs to Memory stage
         .RegWriteM1         (RegWriteM1),
         .ResultSrcM1        (ResultSrcM1),
@@ -414,6 +435,9 @@ module top (
         .WriteDataM1        (WriteDataM1),
         .RdM1               (RdM1),
         .PCPlus8M1          (PCPlus8M1),
+
+        .PCPlus4M1(PCPlus4M1),
+        .PCPlus4M2(PCPlus4M2),
 
 
         .ALUResultM2        (ALUResultM2),
@@ -461,6 +485,9 @@ module top (
     logic [4:0] RdW2;
     logic [31:0] PCPlus8W2;
 
+    logic [31:0] PCPlus4W1;
+    logic [31:0] PCPlus4W2;
+
     memory_to_writeback_register memory_to_writeback_register_inst (
         // clock
         .clk        (clk),
@@ -485,6 +512,10 @@ module top (
         .RdM2        (RdM2),
         .PCPlus8M2   (PCPlus8M2),
 
+        .PCPlus4M1(PCPlus4M1),
+        .PCPlus4M2(PCPlus4M2),
+        
+
         // outputs to Writeback stage
         .RegWriteW1  (RegWriteW1),
         .RegWriteW2  (RegWriteW2),
@@ -499,6 +530,8 @@ module top (
         .ALUResultW2 (ALUResultW2),
         .ReadDataW2  (ReadDataW2),
         .RdW2        (RdW2),
+        .PCPlus4W1(PCPlus4W1),
+        .PCPlus4W2(PCPlus4W2),
         .PCPlus8W2   (PCPlus8W2)
     );
 
@@ -511,6 +544,9 @@ module top (
         .ReadDataW1  (ReadDataW1),
         .PCPlus8W1   (PCPlus8W1),
         .ResultSrcW1 (ResultSrcW1),
+
+        .PCPlus4W1(PCPlus4W1),
+        .PCPlus4W2(PCPlus4W2),
 
         .ALUResultW2 (ALUResultW2),
         .ReadDataW2  (ReadDataW2),
@@ -572,6 +608,8 @@ module top (
         .RegWriteM2   (RegWriteM2),
         .PCE1(PCE1),
         .PCE2(PCE2),
+        .PCD1(PCD1),
+        .PCD2(PCD2),
 
         .ResultSrcE1  (ResultSrcE1),
         .ResultSrcE2  (ResultSrcE2),
@@ -581,6 +619,8 @@ module top (
         .BranchD2(BranchD2),
         .RdD1(RdD1),
         .RdD2(RdD2),
+        .JumpD1(JumpD1),
+        .JumpD2(JumpD2),
 
         // outputs to control forwarding & stalling
         .ForwardAE1   (ForwardAE1),

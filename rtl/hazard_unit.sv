@@ -37,7 +37,10 @@ module hazard_unit(
 
     input logic [31:0] PCE1,//use the PC values to determine
     input logic [31:0] PCE2,// which branch instruction should be taken if branches in both pipelines
-
+    input logic [31:0] PCD1,
+    input logic [31:0] PCD2,    
+    input logic [1:0] JumpD1,
+    input logic [1:0] JumpD2,
 
     //Forward outputs: 000 = no forwardin,
     //001 forwarding from writeback stage pipeline 1,
@@ -127,7 +130,90 @@ always_comb begin
 
     end*/
 
-    if((Rs4D == RdD1 || Rs5D == RdD1) && !(RdD1 == 0))begin
+
+    /*
+
+    if(jumpin1 && jumpin2)
+        //check which is lower PC val
+        //execute that one
+        
+    if(jumpin1 only)
+        // stall p2
+        //execute instr1 first
+        //then we comeback -> need to account that RET is a jump itself
+        //execute instr 2 in next cycle    
+
+    if jumpin2 only
+
+        //same but opposite to above
+    */
+
+
+    if(JumpD1 != 2'b00 && JumpD2 != 2'b00)begin
+
+        FlushDecode2 = 1'b1;
+        FlushExecute2 = 1'b1;
+        StallFetch2 = 1'b1;
+        StallDecode2 = 1'b1;
+
+    end
+
+    else if(JumpD1 != 2'b00)begin
+
+        FlushDecode1 = 1'b1;
+        FlushDecode2 = 1'b1;
+
+        StallFetch1 = 1'b1;
+        StallFetch2 = 1'b1;
+
+        /*if(PCD2 < PCD1)begin
+            //execute pipeline 2 first
+            FlushDecode1 = 1'b1;
+            FlushExecute1 = 1'b1;
+
+            FlushDecode2 = 1'b1;
+
+        end
+        else begin 
+            //execute jump first
+            FlushDecode2 = 1'b1;
+            FlushExecute2 = 1'b1;
+
+            FlushDecode1 = 1'b1;
+        end*/
+
+    end
+
+
+    else if(JumpD2 != 2'b00)begin
+
+        FlushDecode1 = 1'b1;
+        FlushDecode2 = 1'b1;
+
+        StallFetch1 = 1'b1;
+        StallFetch2 = 1'b1;
+
+        /*if(PCD2 < PCD1)begin
+            //execute pipeline 2 first
+            FlushDecode1 = 1'b1;
+            FlushExecute1 = 1'b1;
+
+            FlushDecode2 = 1'b1;
+
+        end
+        else begin 
+            //execute jump first
+            FlushDecode2 = 1'b1;
+            FlushExecute2 = 1'b1;
+
+            FlushDecode1 = 1'b1;
+        end*/
+
+    end
+
+
+
+    if((Rs4D == RdD1 || Rs5D == RdD1) && !(RdD1 == 0) && JumpD1 == 2'b00 && JumpD2 == 2'b00)begin
 
         StallExecute2 = 1'b1;
         StallDecode2 = 1'b1; 
@@ -140,7 +226,7 @@ always_comb begin
     end
 
 
-    if((RdD1 == RdD2) && !(BranchD1 || BranchD2) && !(RdD1 == 0 || RdD2 == 0))begin
+    if((RdD1 == RdD2) && !(BranchD1 || BranchD2) && !(RdD1 == 0 || RdD2 == 0) && JumpD1 == 2'b00 && JumpD2 == 2'b00)begin
 
         StallExecute2 = 1'b1;
         StallDecode1 = 1'b1;
@@ -172,7 +258,7 @@ always_comb begin
 
 
     end
-
+    //redundant logic:
     if(PCSrcE1 != 2'b00 && PCSrcE2 != 2'b00)begin//branches in both pipelines
 
         FlushDecode2 = 1'b1;
@@ -220,6 +306,7 @@ always_comb begin
         //StallFetch2 = 1'b1;
         FlushDecode2 = 1'b1;
         FlushExecute2 = 1'b1;
+        //FlushMemory1 = 1'b1; //Not needed
 
         BranchIn2 = 1'b1;
 
