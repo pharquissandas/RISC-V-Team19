@@ -47,7 +47,7 @@ The highest level of achievement successfully verified is the **Cached Pipelined
 ### Critical Points for Assessment
 1.  **Branch Management (Required):** All major processor versions are accessible via dedicated branches, which contain the correct design in the **`rtl`** folder:
     * **main** — Single-Cycle RV32I CPU with full RV32I base instruction support (Stretch Goal 3)  
-    * **pipelined** — Verified five-stage pipelined RV32I CPU with full instruction support (Stretch Goals 1 & 3)  
+    * **pipelined** — Five-stage pipelined RV32I CPU with full instruction support (Stretch Goals 1 & 3)  
     * **cached** — Pipelined CPU extended with a 2-way set-associative data cache (Stretch Goals 1, 2 & 3)  
     * **fpga** — FPGA-oriented variant of the pipelined design (special exploration)  
     * **superscalar** — Draft superscalar extension (advanced exploratory work)
