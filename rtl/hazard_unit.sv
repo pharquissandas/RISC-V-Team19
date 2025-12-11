@@ -42,6 +42,21 @@ module hazard_unit(
     input logic [1:0] JumpD1,
     input logic [1:0] JumpD2,
 
+    input StoreD1,
+    input StoreD2,
+
+    input LoadD1,
+    input LoadD2,
+
+
+    input logic LoadE1,
+    input logic LoadE2,
+    input logic StoreE1,
+    input logic StoreE2,
+
+    input logic [31:0] ALUResultE1,
+    input logic [31:0] ALUResultE2,
+
     //Forward outputs: 000 = no forwardin,
     //001 forwarding from writeback stage pipeline 1,
     //010 forwarding from alu result in memory stage in pipeline 1
@@ -213,15 +228,24 @@ always_comb begin
 
 
 
-    if((Rs4D == RdD1 || Rs5D == RdD1) && !(RdD1 == 0) && JumpD1 == 2'b00 && JumpD2 == 2'b00)begin
+    if((Rs4D == RdD1 || Rs5D == RdD1) && !(RdD1 == 0) && JumpD1 == 2'b00 && JumpD2 == 2'b00 && !ResultSrcE2 == 2'b01)begin
 
-        StallExecute2 = 1'b1;
-        StallDecode2 = 1'b1; 
-        StallDecode1 = 1'b1;    //needed?
-        StallFetch1 = 1'b1; 
+        // StallExecute2 = 1'b1;
+        // StallDecode2 = 1'b1; 
+        // StallDecode1 = 1'b1;    //needed?
+        // StallFetch1 = 1'b1; 
+        // StallFetch2 = 1'b1;
+        // FlushDecode1 = 1'b1;
+        // FlushExecute2 = 1'b1;
+
+        StallFetch1 = 1'b1;
         StallFetch2 = 1'b1;
+
         FlushDecode1 = 1'b1;
+        StallDecode2 = 1'b1;
+
         FlushExecute2 = 1'b1;
+
 
     end
 
@@ -342,12 +366,20 @@ always_comb begin
         StallDecode1 = 1'b1;
         StallFetch1 = 1'b1;
         FlushExecute1 = 1'b1;
+        
+        StallDecode2 = 1'b1;
+        StallFetch2 = 1'b1;
+        FlushExecute2 = 1'b1;
     end
 
     if(ResultSrcE1 == 2'b01 && (RdE1 != 0) && (RdE1 == Rs4D || RdE1 == Rs5D)) begin
         StallDecode2 = 1'b1;
         StallFetch2 = 1'b1;
         FlushExecute2 = 1'b1;
+        
+        StallDecode1 = 1'b1;
+        StallFetch1 = 1'b1;
+        FlushExecute1 = 1'b1;
     end
 
 
@@ -373,17 +405,53 @@ always_comb begin
     else if((Rs5E == RdW1) && RegWriteW1 && Rs5E != 0)
         ForwardBE2 = 3'b100;
 
+    /*
+        if(store address in pipeline 2 == load address in pipeline 1)
+            Nothing
+
+
+        if(store address in pipeline 1 == load address in pipeline 2)
+            Stall Pipeline 2
+
+
+
+    */
+
+//what is we have load then store at same address in same cycle?
+
+    if(StoreD1 && LoadD2 )begin
+
+        FlushDecode1 = 1'b1;
+        FlushExecute2 = 1'b1;
+
+        StallFetch1 = 1'b1;
+        StallFetch2 = 1'b1;
+
+        StallDecode2  = 1'b1;
+    
+    end
+
     // load-use hazard (data hazard)
     if (ResultSrcE2 == 2'b01 && (RdE2 != 0) && (RdE2 == Rs4D || RdE2 == Rs5D)) begin
         StallDecode2 = 1'b1;
         StallFetch2 = 1'b1;
         FlushExecute2 = 1'b1;
+
+        StallDecode1 = 1'b1;
+        StallFetch1 = 1'b1;
+        FlushExecute1 = 1'b1;
     end
     if (ResultSrcE2 == 2'b01 && (RdE2 != 0) &&  (RdE2 == Rs1D || RdE2 == Rs2D)) begin
 
         StallDecode1 = 1'b1;
         StallFetch1 = 1'b1;
         FlushExecute1  = 1'b1;
+
+
+        StallDecode2 = 1'b1;    
+        StallFetch2 = 1'b1;
+        FlushExecute2 = 1'b1;
+        
 
     end
 end

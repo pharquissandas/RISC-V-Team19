@@ -16,6 +16,8 @@ module decode_to_execute_register(
     input logic ALUSrcBD1,
     input logic [2:0] AddressingControlD1,
     input logic [2:0] BranchTypeD1,
+    input logic LoadD1,
+    input logic StoreD1,
 
     input logic RegWriteD2,
     input logic [1:0] ResultSrcD2,
@@ -27,6 +29,9 @@ module decode_to_execute_register(
     input logic ALUSrcBD2,
     input logic [2:0] AddressingControlD2,
     input logic [2:0] BranchTypeD2,
+    input logic LoadD2,
+    input logic StoreD2,
+
 
     // data signals from reg_file.sv & instructions
     input logic [31:0] RD1D,
@@ -89,6 +94,10 @@ module decode_to_execute_register(
     output logic [31:0]    PCPlus4E1, // PC + 4
     output logic [31:0]    PCPlus4E2, // PC + 4
     output logic [31:0] PCPlus8E1,
+    output logic StoreE1,
+    output logic StoreE2,
+    output logic LoadE1,
+    output logic LoadE2,
     output logic [31:0] PCPlus8E2
 );
     always_ff @(posedge clk) begin
@@ -105,6 +114,8 @@ module decode_to_execute_register(
             ALUSrcBE1 <= 1'b0;
             AddressingControlE1 <= 3'b0;
             BranchTypeE1 <= 3'b0;
+            StoreE1 <= 1'b0;
+            LoadE1 <= 1'b0;
 
             RD1E <= 32'b0;
             RD2E <= 32'b0;
@@ -129,9 +140,9 @@ module decode_to_execute_register(
             ALUSrcBE1 <= ALUSrcBD1;
             AddressingControlE1 <= AddressingControlD1;
             BranchTypeE1 <= BranchTypeD1;
+            LoadE1 <= LoadD1;
+            StoreE1 <= StoreD1;
             
-            
-
             RD1E <= RD1D;
             RD2E <= RD2D;
             PCE1 <= PCD1;
@@ -160,6 +171,8 @@ module decode_to_execute_register(
             ALUSrcBE2 <= 1'b0;
             AddressingControlE2 <= 3'b0;
             BranchTypeE2 <= 3'b0;
+            LoadE2 <= 1'b0;
+            StoreE2 <= 1'b0;
             
             RD4E <= 32'b0;
             RD5E <= 32'b0;
@@ -186,6 +199,8 @@ module decode_to_execute_register(
             ALUSrcBE2 <= ALUSrcBD2;
             AddressingControlE2 <= AddressingControlD2;
             BranchTypeE2 <= BranchTypeD2;
+            LoadE2 <= LoadD2;
+            StoreE2 <= StoreD2;
 
             RD4E <= RD4D;
             RD5E <= RD5D;

@@ -43,6 +43,10 @@ module decode(
     output logic        ALUSrcBD2,
     output logic        ALUSrcAD2,
     output logic [2:0]  AddressingControlD2,
+    output logic        LoadD1,
+    output logic        LoadD2,
+    output logic        StoreD1,
+    output logic        StoreD2,
     output logic [31:0] a0,
     output logic [31:0] a1
 );
@@ -77,6 +81,8 @@ module decode(
         .Jump(JumpD1),
         .ImmSrc(ImmSrcD1),
         .AddressingControl(AddressingControlD1),
+        .Load(LoadD1),
+        .Store(StoreD1),
         .ResultSrc(ResultSrcD1)
     );
 
@@ -96,6 +102,8 @@ module decode(
         .Jump(JumpD2),
         .ImmSrc(ImmSrcD2),
         .AddressingControl(AddressingControlD2),
+        .Load(LoadD2),
+        .Store(StoreD2),
         .ResultSrc(ResultSrcD2)
 
     );

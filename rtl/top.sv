@@ -116,6 +116,10 @@ module top (
     logic        ALUSrcBD2;
     logic        ALUSrcAD2;
     logic [2:0]  AddressingControlD2; 
+    logic LoadD1;
+    logic LoadD2;
+    logic StoreD1;
+    logic StoreD2;
 
 
     decode decode_inst (
@@ -162,6 +166,10 @@ module top (
         .ALUSrcBD2(ALUSrcBD2),
         .AddressingControlD1(AddressingControlD1),
         .AddressingControlD2(AddressingControlD2),
+        .LoadD1(LoadD1),
+        .LoadD2(LoadD2),
+        .StoreD1(StoreD1),
+        .StoreD2(StoreD2),
         .a0(a0),
         .a1(a1)
 
@@ -189,6 +197,10 @@ module top (
     logic ALUSrcBE2;
     logic [2:0] AddressingControlE2;
     logic [2:0] BranchTypeE2;
+    logic LoadE1;
+    logic LoadE2;
+    logic StoreE1;
+    logic StoreE2;
 
     logic [31:0] RD1E;
     logic [31:0] RD2E;
@@ -228,6 +240,8 @@ module top (
         .ALUSrcBD1         (ALUSrcBD1),
         .AddressingControlD1(AddressingControlD1),
         .BranchTypeD1      (BranchTypeD1),
+        .LoadD1(LoadD1),
+        .StoreD1(StoreD1),
 
         .RegWriteD2        (RegWriteD2),
         .ResultSrcD2       (ResultSrcD2),
@@ -239,8 +253,8 @@ module top (
         .ALUSrcBD2         (ALUSrcBD2),
         .AddressingControlD2(AddressingControlD2),
         .BranchTypeD2      (BranchTypeD2),
-
-
+        .LoadD2(LoadD2),
+        .StoreD2(StoreD2),
 
         // data signals from reg_file.sv & instructions
         .RD1D             (RD1D),
@@ -273,6 +287,8 @@ module top (
         .ALUSrcBE1         (ALUSrcBE1),
         .AddressingControlE1(AddressingControlE1),
         .BranchTypeE1      (BranchTypeE1),
+        .LoadE1(LoadE1),
+        .StoreE1(StoreE1),
 
         .RegWriteE2        (RegWriteE2),
         .ResultSrcE2       (ResultSrcE2),
@@ -284,6 +300,8 @@ module top (
         .ALUSrcBE2         (ALUSrcBE2),
         .AddressingControlE2(AddressingControlE2),
         .BranchTypeE2      (BranchTypeE2),
+        .LoadE2(LoadE2),
+        .StoreE2(StoreE2),
 
         .RD1E             (RD1E),
         .RD2E             (RD2E),
@@ -610,6 +628,8 @@ module top (
         .PCE2(PCE2),
         .PCD1(PCD1),
         .PCD2(PCD2),
+        .ALUResultE1(ALUResultE1),
+        .ALUResultE2(ALUResultE2),
 
         .ResultSrcE1  (ResultSrcE1),
         .ResultSrcE2  (ResultSrcE2),
@@ -621,6 +641,14 @@ module top (
         .RdD2(RdD2),
         .JumpD1(JumpD1),
         .JumpD2(JumpD2),
+        .LoadE1(LoadE1),
+        .LoadE2(LoadE2),
+        .LoadD1(LoadD1),
+        .LoadD2(LoadD2),
+        .StoreD1(StoreD1),
+        .StoreD2(StoreD2),
+        .StoreE1(StoreE1),
+        .StoreE2(StoreE2),
 
         // outputs to control forwarding & stalling
         .ForwardAE1   (ForwardAE1),

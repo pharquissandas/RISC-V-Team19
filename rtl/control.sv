@@ -11,6 +11,8 @@ module control(
     // output logic [1:0] PCSrc, // control the source for the next PC value (00 = PC+4, 01 = PC + imm(branch/jal), 10 = ALUResult (jalr))
     output logic [1:0] ResultSrc, // control the source of data to write back to register file (00 = ALU, 01 = Memory, 10 = PC+4)
     output logic Branch,
+    output logic Load,
+    output logic Store,
     output logic [2:0] BranchType, 
     output logic [1:0] Jump,       // indicates jump instruction (00 = no jump, 01 = JAL, 10 = JALR)
     output logic [2:0] ImmSrc, // selects type of immediate (I = 000, S = 001, B = 010, J = 011, U = 100)
@@ -39,7 +41,8 @@ module control(
         Jump = 2'b00;
         ImmSrc = 3'b000;
         AddressingControl = 3'b000;
-
+        Store = 1'b0;
+        Load= 1'b0;
 
         case(opcode)
             // R-type instructions
@@ -100,6 +103,7 @@ module control(
 
             // I-type Load instructions
             7'b0000011: begin
+                Load = 1'b1;
                 RegWrite = 1'b1;
                 ALUSrcB = 1'b1; // SrcB = imm
                 ResultSrc = 2'b01; // From Memory
@@ -110,6 +114,7 @@ module control(
 
             // S-type Store instructions
             7'b0100011: begin
+                Store = 1'b1;
                 MemWrite = 1'b1;
                 ALUSrcB   = 1'b1; // read from immediate
                 ImmSrc   = 3'b001; // S-type immediate
