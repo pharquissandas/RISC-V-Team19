@@ -1,6 +1,8 @@
+# Personal Statement
+
 **Name:** Ojas Parikh \
 **CID:** 02574263 \
-**GitHub username:** ojas-parikh
+**GitHub Username:** ojas-parikh
 
 ---
 
