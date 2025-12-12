@@ -14,7 +14,7 @@ In practice, this meant that I:
 - Ensured that the final single-cycle CPU correctly implemented all required RV32I behaviours and executed the reference programs without errors.
 - Completed and corrected the preliminary pipelined design by integrating the four pipeline registers, extending the hazard unit with stalling and flushing, and resolving structural inconsistencies.
 - Performed the majority of debugging for both CPU versions, using systematic waveform tracing to identify architectural and timing bugs.
-- Fixed issues in the testbench and build scripts (including `doit` and `compile.sh`), restoring a functional automated verification flow.
+- Fixed issues in the testbench and build scripts (including `doit` and `assemble.sh`), restoring a functional automated verification flow.
 - Implemented the F1 starting-light program and used it to drive early validation of the processor.
 - Diagnosed and corrected memory-map and memory-size problems that caused reference-program failures, enabling all tests to run correctly.
 - Ultimately brought both the single-cycle and pipelined RV32I processors to a fully verified state, passing the F1 test, the `pdf.asm` program, and all five tests in `tb/asm`.
@@ -27,12 +27,12 @@ In the early stage of the project, our team adopted an independent development a
 
 By reconstructing the design and validating correctness through systematic structural reasoning rather than relying on a testbench or waveform tools at this stage, I produced a clean, correct, and fully functional single-cycle RV32I CPU building on the initial contributions from my teammates. The implementation supports all required RV32I base instructions (and nearly the full RV32I instruction set, excluding only FENCE, ECALL/EBREAK and CSR instructions as noted in Stretch Goal 3), and is capable of running the F1 program, the reference `pdf.asm`, and all verification tests once the testbench infrastructure was operational.
 
-The following contributions are traceable in this [representative commit](https://github.com/pharquissandas/RISC-V-T19/commit/c4ae1357ca70b64cff745d25ec3ec5ade91b6f79):
+The following contributions are traceable in this **[representative commit](https://github.com/pharquissandas/RISC-V-T19/commit/c4ae1357ca70b64cff745d25ec3ec5ade91b6f79)**, which reflects a **complete and coherent architectural revision** rather than incremental intermediate changes:
 
 
 
 - **Control Path**
-  - Implemented the `control.sv` module, integrating the `main_decoder` and `alu_decoder` logics into a coherent control unit to minimise redundancy and avoid rewrite issue between two sub-modules.
+  - Implemented the `control.sv` module, integrating the `main_decoder` and `alu_decoder` logics into a coherent control unit to minimise redundancy and avoid rewrite conflicts between two sub-modules.
     - Introduced the `BranchType` and `Branch` control signals to support all B-type instructions in coordination with the ALU’s Zero flag, without requiring additional condition flags.
     - Structured the decoding logic by distinguishing I-type and B-type instructions explicitly, allowing the control unit to determine the required ALU operation directly and unambiguously by `ALUControl` signal.
     - Added the `ALUSrcA` signal to support the AUIPC instruction by selecting the PC as an ALU operand.
@@ -58,7 +58,7 @@ After my teammates produced an initial forwarding-only hazard unit and prelimina
 pipeline registers, I took over the integration work. Through extensive GTKWAVE tracing 
 and structural debugging, I completed the full 5-stage pipelined RV32I processor.
 
-The following contributions are traceable in this [representative commit](https://github.com/pharquissandas/RISC-V-T19/commit/0c0a794b5dd62a039284c356115b27157f86f33a):
+The following contributions are traceable in this **[representative commit](https://github.com/pharquissandas/RISC-V-T19/commit/0c0a794b5dd62a039284c356115b27157f86f33a)**, which reflects a **complete and coherent architectural revision** rather than incremental intermediate changes:
 
 - **Integrated the complete 5-stage pipeline architecture**  
   Built the top-level datapath and control path into stage-specific modules 
@@ -122,8 +122,8 @@ Although the assembly programming and testbench infrastructure were shared withi
 
   Through this targeted method, I traced the failure to jump/branch-related tests and eventually identified the precise cause: **the instruction memory had been allocated with insufficient capacity**.
 
-  After expanding the IMEM size, the single-cycle CPU implementation — which I had independently reconstructed from the early draft before any working testbench or downstream module fixes were available — passed:  
-  - all base RV32I ISA instructions,
+  This exposed an early oversight in resource planning, as the initial memory configuration was not sized with full control-flow testing in mind. After expanding the IMEM size, the single-cycle CPU implementation — which I had independently reconstructed from the early draft before any working testbench or downstream module fixes were available — passed:  
+  - all base RV32I instructions,
   - all verification tests in `tb/asm`.
 
   This debugging and repair were completed within a tight 2-hour lab session and were essential for restoring momentum in the project and enabling the subsequent pipeline development.
