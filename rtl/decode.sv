@@ -1,6 +1,5 @@
 module decode(
     input logic        clk, 
-    input logic        rst,
     input logic [31:0] InstrD1, //instruction to decode from pipeline 1
     input logic [31:0] InstrD2, //instruction to decode from pipeline 2
     input logic [31:0] ResultW1, //write data for pipeline 1 
@@ -43,17 +42,22 @@ module decode(
     output logic        ALUSrcBD2,
     output logic        ALUSrcAD2,
     output logic [2:0]  AddressingControlD2,
-    output logic        LoadD1,
     output logic        LoadD2,
     output logic        StoreD1,
-    output logic        StoreD2,
-    output logic [31:0] a0,
-    output logic [31:0] a1
+    output logic [31:0] a0
+
 );
 
 //Connections for extend block
     logic [2:0] ImmSrcD1;
     logic [2:0] ImmSrcD2;
+
+    /* verilator lint_off UNUSED */
+
+    logic NC1; //Not connected
+    logic NC2; //Not connected
+
+    /* verilator lint_on UNUSED */
 
     always_comb begin
 
@@ -81,7 +85,7 @@ module decode(
         .Jump(JumpD1),
         .ImmSrc(ImmSrcD1),
         .AddressingControl(AddressingControlD1),
-        .Load(LoadD1),
+        .Load(NC1),
         .Store(StoreD1),
         .ResultSrc(ResultSrcD1)
     );
@@ -103,7 +107,7 @@ module decode(
         .ImmSrc(ImmSrcD2),
         .AddressingControl(AddressingControlD2),
         .Load(LoadD2),
-        .Store(StoreD2),
+        .Store(NC2),
         .ResultSrc(ResultSrcD2)
 
     );
@@ -126,8 +130,8 @@ module decode(
         .RD2(RD2D),
         .RD4(RD4D),
         .RD5(RD5D),
-        .a0(a0),
-        .a1(a1)
+        .a0(a0)
+
     );
 
 

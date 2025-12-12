@@ -34,28 +34,13 @@ module hazard_unit(
     input [4:0] RdD1,
     input [4:0] RdD2,
 
-
-    input logic [31:0] PCE1,//use the PC values to determine
-    input logic [31:0] PCE2,// which branch instruction should be taken if branches in both pipelines
     input logic [31:0] PCD1,
     input logic [31:0] PCD2,    
     input logic [1:0] JumpD1,
     input logic [1:0] JumpD2,
 
     input StoreD1,
-    input StoreD2,
-
-    input LoadD1,
     input LoadD2,
-
-
-    input logic LoadE1,
-    input logic LoadE2,
-    input logic StoreE1,
-    input logic StoreE2,
-
-    input logic [31:0] ALUResultE1,
-    input logic [31:0] ALUResultE2,
 
     //Forward outputs: 000 = no forwardin,
     //001 forwarding from writeback stage pipeline 1,
@@ -80,9 +65,6 @@ module hazard_unit(
     output logic FlushDecode2,
     output logic FlushExecute2,
 
-    output logic BranchIn1,
-    output logic BranchIn2,
-
     output logic StallExecute1,
     output logic StallExecute2,
     output logic StallMemory1,
@@ -97,8 +79,6 @@ module hazard_unit(
 );
 
 always_comb begin
-    BranchIn1      = 1'b0;
-    BranchIn2      = 1'b0;
     ForwardAE1     = 3'b000;
     ForwardBE1     = 3'b000;
     StallDecode1   = 1'b0;
@@ -124,46 +104,8 @@ always_comb begin
     
 
 
-    //Dependcy unit is not correct, we need to stop execution if dependency is recognised in decode stage
-    //so flush execute? 
-    //but then we need to execute the instruction taht was halted the cycle immediately after
-///I THINK STALLPIPELINE NEEDS TO STALL EVERY STAGE
-//in dependey uunit igonre if everything is 0s so we dont stall forever
-
-
-//Need to account for dependency between source and destinationr egisters in same cycle between p1 and p2
-
-    /*if((Rs1D == RdD2 || Rs2D == RdD2) && !(RdD2 == 0)) begin
-
-        StallExecute1 = 1'b1;
-        StallDecode1 = 1'b1;
-        StallDecode2 = 1'b1; //needed?
-        StallFetch1 = 1'b1;
-        StallFetch2 = 1'b1;
-        FlushDecode1 = 1'b1;
-        FlushExecute2 = 1'b1;
-
-    end*/
-
-
-    /*
-
-    if(jumpin1 && jumpin2)
-        //check which is lower PC val
-        //execute that one
-        
-    if(jumpin1 only)
-        // stall p2
-        //execute instr1 first
-        //then we comeback -> need to account that RET is a jump itself
-        //execute instr 2 in next cycle    
-
-    if jumpin2 only
-
-        //same but opposite to above
-    */
-
-       //Branch and Jumps:
+ 
+    //Branch and Jumps:
 
 
     if(BranchD1 && BranchD2)begin
@@ -172,13 +114,6 @@ always_comb begin
         FlushExecute2 = 1'b1;
         StallFetch2 = 1'b1;
         StallDecode2 = 1'b1;
-
-        
-        //We also need to flush decode and fetch ? for both pipelines
-        //So that we execute the correct next instruction
-        //however if no branch taken
-        //we dont need to do this for both pipelines
-
 
     end
 
@@ -192,11 +127,6 @@ always_comb begin
     
     end
 
-    // else if(BranchD1)begin
-
-
-    // end
-
     else if((JumpD1 != 2'b00) && BranchD2)begin
 
         StallFetch1 = 1'b1;
@@ -206,13 +136,6 @@ always_comb begin
         FlushExecute2 = 1'b1;
         
     end
-    
-    // else if(BranchD2) begin
-
-
-    // end
-
-
 
     if(JumpD1 != 2'b00 && JumpD2 != 2'b00 && PCSrcE1 == 2'b00 && PCSrcE2 == 2'b00)begin
 
@@ -231,14 +154,6 @@ always_comb begin
         
         end
 
-        //StallFetch2 = 1'b1;
-        // StallDecode2 = 1'b1;
-
-        // FlushDecode1 = 1'b1;
-        // FlushDecode2 = 1'b1;
-        // FlushExecute1 = 1'b1;
-        // FlushExecute2 = 1'b1;
-
     end
 
     else if(JumpD1 != 2'b00 && PCSrcE1 == 2'b00 && PCSrcE2 == 2'b00)begin
@@ -248,22 +163,6 @@ always_comb begin
 
         StallFetch1 = 1'b1;
         StallFetch2 = 1'b1;
-
-        /*if(PCD2 < PCD1)begin
-            //execute pipeline 2 first
-            FlushDecode1 = 1'b1;
-            FlushExecute1 = 1'b1;
-
-            FlushDecode2 = 1'b1;
-
-        end
-        else begin 
-            //execute jump first
-            FlushDecode2 = 1'b1;
-            FlushExecute2 = 1'b1;
-
-            FlushDecode1 = 1'b1;
-        end*/
 
     end
 
@@ -276,41 +175,9 @@ always_comb begin
         StallFetch1 = 1'b1;
         StallFetch2 = 1'b1;
 
-        /*if(PCD2 < PCD1)begin
-            //execute pipeline 2 first
-            FlushDecode1 = 1'b1;
-            FlushExecute1 = 1'b1;
-
-            FlushDecode2 = 1'b1;
-
-        end
-        else begin 
-            //execute jump first
-            FlushDecode2 = 1'b1;
-            FlushExecute2 = 1'b1;
-
-            FlushDecode1 = 1'b1;
-        end*/
-
     end
 
-    if(JumpD1) begin
-
-        if(PCD1 < PCD2) begin
-
-            // StallFetch1 = 1'b1;
-            // StallFetch2 = 1'b1;
-
-            // FlushDecode1 = 1'b1;
-            // FlushDecode2 = 1'b1;
-            
-            // FlushExecute2 = 1'b1;
-
-        end
-
-    end
-
-    if(JumpD2) begin
+    if(JumpD2 != 2'b00) begin
 
         if(PCD2 < PCD1)begin
 
@@ -328,14 +195,6 @@ always_comb begin
     end
 
     if((Rs4D == RdD1 || Rs5D == RdD1) && !(RdD1 == 0) && JumpD1 == 2'b00 && JumpD2 == 2'b00 && !(ResultSrcE2 == 2'b01))begin
-
-        // StallExecute2 = 1'b1;
-        // StallDecode2 = 1'b1; 
-        // StallDecode1 = 1'b1;    //needed?
-        // StallFetch1 = 1'b1; 
-        // StallFetch2 = 1'b1;
-        // FlushDecode1 = 1'b1;
-        // FlushExecute2 = 1'b1;
 
         StallFetch1 = 1'b1;
         StallFetch2 = 1'b1;
@@ -361,100 +220,35 @@ always_comb begin
     
     end
 
-
-    // if(BranchD1 && (JumpD2 != 2'b00))begin
-
-    //     // FlushDecode2 = 1'b1;
-    //     // FlushExecute2 = 1'b1;
-    //     // StallFetch2 = 1'b1;
-    //     // StallDecode2 = 1'b1;
-
-    //     StallFetch1 = 1'b1;
-    //     StallFetch2 = 1'b1;
-
-    //     FlushDecode1 = 1'b1;
-    //     FlushExecute2 = 1'b1;
-
-    // end
-
-    // if((JumpD1 != 2'b00) && BranchD2)begin
-
-    //     FlushDecode2 = 1'b1;
-    //     FlushExecute2 = 1'b1;
-    //     StallFetch2 = 1'b1;
-    //     StallDecode2 = 1'b1;
-
-
-    // end
-
-
-    
-    // if(BranchD1 && BranchD2)begin
-    
-    //     FlushDecode2 = 1'b1;
-    //     FlushExecute2 = 1'b1;
-    //     StallFetch2 = 1'b1;
-    //     StallDecode2 = 1'b1;
-
-        
-    //     //We also need to flush decode and fetch ? for both pipelines
-    //     //So that we execute the correct next instruction
-    //     //however if no branch taken
-    //     //we dont need to do this for both pipelines
-
-
-    // end
-    //redundant logic:
     if(PCSrcE1 != 2'b00 && PCSrcE2 != 2'b00)begin//branches in both pipelines
 
         FlushDecode2 = 1'b1;
         FlushExecute2 = 1'b1;
 
         FlushDecode1 = 1'b1;
-        FlushExecute1 = 1'b1;
-
-        if(PCE1 < PCE2) begin //take branch of Pipeline 1 and ignore branch result of pipeline 2
-            
-            BranchIn1 = 1'b1;
-
-        end
-
-        else if (PCE1 > PCE2) begin
-
-            BranchIn2 = 1'b1;
-        
-        end
+        FlushExecute1 = 1'b1;       
 
     end
 
     else if (PCSrcE1 != 2'b00) begin
 
-        //StallFetch1 = 1'b1;
         FlushDecode1 = 1'b1;
         FlushExecute1 = 1'b1;
 
-       // StallFetch2 = 1'b1;
         FlushDecode2 = 1'b1;
         FlushExecute2 = 1'b1;
         FlushMemory2 = 1'b1;
-
-        BranchIn1 = 1'b1;
 
     end
 
 
     else if (PCSrcE2 != 2'b00) begin
         
-       // StallFetch1 = 1'b1;
         FlushDecode1 = 1'b1;
         FlushExecute1 = 1'b1;
 
-        //StallFetch2 = 1'b1;
         FlushDecode2 = 1'b1;
         FlushExecute2 = 1'b1;
-        //FlushMemory1 = 1'b1; //Not needed
-
-        BranchIn2 = 1'b1;
 
     end
 
@@ -480,8 +274,6 @@ always_comb begin
         ForwardBE1 = 3'b001;
     else if((Rs2E == RdW2) && RegWriteW2 && Rs2E != 0)
         ForwardBE1 = 3'b100;
-
-    // unconditional jump control hazard (branch taken)
 
     // load-use hazard (data hazard)
     if (ResultSrcE1 == 2'b01 && (RdE1 != 0) && (RdE1 == Rs1D || RdE1 == Rs2D)) begin
@@ -527,20 +319,6 @@ always_comb begin
     else if((Rs5E == RdW1) && RegWriteW1 && Rs5E != 0)
         ForwardBE2 = 3'b100;
 
-    /*
-        if(store address in pipeline 2 == load address in pipeline 1)
-            Nothing
-
-
-        if(store address in pipeline 1 == load address in pipeline 2)
-            Stall Pipeline 2
-
-
-
-    */
-
-//what is we have load then store at same address in same cycle?
-
     if(StoreD1 && LoadD2 )begin
 
         FlushDecode1 = 1'b1;
@@ -577,11 +355,5 @@ always_comb begin
 
     end
 end
-
-
- 
-
-
-
 
 endmodule

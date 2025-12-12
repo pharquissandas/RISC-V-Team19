@@ -6,10 +6,8 @@ module fetch_to_decode_register(
     input logic rst1,
     input logic rst2,
     input logic [31:0] PCF1,
-    input logic [31:0] PCPlus8F1,
     input logic [31:0] InstrF1,
     input logic [31:0] PCF2,
-    input logic [31:0] PCPlus8F2,
     input logic [31:0] InstrF2,
     input logic [31:0]    PCPlus4F2, // PC + 4
     input logic [31:0]    PCPlus4F1, // PC + 4
@@ -17,8 +15,6 @@ module fetch_to_decode_register(
 
     output logic [31:0] PCD1,
     output logic [31:0] PCD2,
-    output logic [31:0] PCPlus8D1,
-    output logic [31:0] PCPlus8D2,
     output logic [31:0]    PCPlus4D2,
     output logic [31:0]    PCPlus4D1, 
 
@@ -31,13 +27,11 @@ module fetch_to_decode_register(
     always_ff @(posedge clk) begin
         if (rst1) begin
             PCD1 <= 32'b0;
-            PCPlus8D1 <= 32'b0;
             PCPlus4D1 <= 32'b0;
             InstrD1 <= 32'b0;
         end
         else if (en1) begin
             PCD1 <= PCF1;
-            PCPlus8D1 <= PCPlus8F1;
             PCPlus4D1 <= PCPlus4F1;
             InstrD1 <= InstrF1;
         end
@@ -47,13 +41,11 @@ module fetch_to_decode_register(
         
         if (rst2) begin
             PCD2 <= 32'b0;
-            PCPlus8D2 <= 32'b0;
             PCPlus4D2 <= 32'b0;
             InstrD2 <= 32'b0;
         end
         else if (en2) begin
             PCD2 <= PCF2;
-            PCPlus8D2 <= PCPlus8F2;
             PCPlus4D2 <= PCPlus4F2;
             InstrD2 <= InstrF2;
         end

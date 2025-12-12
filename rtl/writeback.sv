@@ -1,12 +1,10 @@
 module writeback (
     input logic [31:0] ALUResultW1,
     input logic [31:0] ReadDataW1,
-    input logic [31:0] PCPlus8W1,
     input logic [1:0] ResultSrcW1,
 
     input logic [31:0] ALUResultW2,
     input logic [31:0] ReadDataW2,
-    input logic [31:0] PCPlus8W2,
     input logic [1:0] ResultSrcW2,
 
     input logic [31:0]    PCPlus4W1, // PC + 4

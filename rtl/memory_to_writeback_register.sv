@@ -14,11 +14,9 @@ module memory_to_writeback_register(
     input logic [31:0] ALUResultM1,
     input logic [31:0] ReadDataM1,
     input logic [4:0] RdM1,
-    input logic [31:0] PCPlus8M1,
     input logic [31:0] ALUResultM2,
     input logic [31:0] ReadDataM2,
     input logic [4:0] RdM2,
-    input logic [31:0] PCPlus8M2,
     input logic [31:0]    PCPlus4M2, // PC + 4
     input logic [31:0]    PCPlus4M1, // PC + 4
 
@@ -31,14 +29,13 @@ module memory_to_writeback_register(
     output logic [31:0] ALUResultW1,
     output logic [31:0] ReadDataW1,
     output logic [4:0]  RdW1,
-    output logic [31:0] PCPlus8W1,
+
     output logic [31:0] ALUResultW2,
     output logic [31:0] ReadDataW2,
     output logic [4:0]  RdW2,
     output logic [31:0]    PCPlus4W1, // PC + 4
-    output logic [31:0]    PCPlus4W2, // PC + 4
+    output logic [31:0]    PCPlus4W2 // PC + 4
 
-    output logic [31:0] PCPlus8W2
 );
 
     always_ff @(posedge clk) begin
@@ -50,7 +47,6 @@ module memory_to_writeback_register(
             ALUResultW1   <= 32'b0;
             ReadDataW1    <= 32'b0;
             RdW1          <= 5'b0;
-            PCPlus8W1     <= 32'b0;
             PCPlus4W1     <= 32'b0;
 
 
@@ -64,7 +60,6 @@ module memory_to_writeback_register(
             ALUResultW1   <= ALUResultM1;
             ReadDataW1    <= ReadDataM1;
             RdW1          <= RdM1;
-            PCPlus8W1     <= PCPlus8M1;
             PCPlus4W1     <= PCPlus4M1;
 
 
@@ -82,7 +77,6 @@ always_ff @(posedge clk) begin
         ALUResultW2   <= 32'b0;
         ReadDataW2    <= 32'b0;
         RdW2          <= 5'b0;
-        PCPlus8W2     <= 32'b0;
         PCPlus4W2     <= 32'b0;
 
     end
@@ -95,7 +89,6 @@ always_ff @(posedge clk) begin
         ALUResultW2   <= ALUResultM2;
         ReadDataW2    <= ReadDataM2;
         RdW2          <= RdM2;
-        PCPlus8W2     <= PCPlus8M2;
         PCPlus4W2     <= PCPlus4M2;
 
 

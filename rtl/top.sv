@@ -1,19 +1,17 @@
 module top (
     input logic clk,
     input logic rst,
-    output logic [31:0] a0,
-    output logic [31:0] a1
+    output logic [31:0] a0
+
 );
 
     logic [31:0] InstrF1;
     logic [31:0] PCF1;
     logic [31:0] PCPlus4F1;
-    logic [31:0] PCPlus8F1;
 
     logic [31:0] InstrF2;
     logic [31:0] PCF2;
     logic [31:0] PCPlus4F2;
-    logic [31:0] PCPlus8F2;
 
 
 
@@ -29,24 +27,18 @@ module top (
         .PCSrcE2(PCSrcE2),
         .PCTargetE2(PCTargetE2),
         .ALUResultE2(ALUResultE2),
-        .BranchIn1(BranchIn1),
-        .BranchIn2(BranchIn2),
         
         .InstrF1(InstrF1),
         .PCF1(PCF1),
-        .PCPlus8F1(PCPlus8F1),
         .InstrF2(InstrF2),
         .PCF2(PCF2),
         .PCPlus4F1(PCPlus4F1),
-        .PCPlus4F2(PCPlus4F2),
-        .PCPlus8F2(PCPlus8F2)
+        .PCPlus4F2(PCPlus4F2)
     );
 
 // Fetch to Decode Register
     logic [31:0] PCD1;
     logic [31:0] PCD2;
-    logic [31:0] PCPlus8D1;
-    logic [31:0] PCPlus8D2;
     logic [31:0] PCPlus4D1;
     logic [31:0] PCPlus4D2;
     logic [31:0] InstrD1;
@@ -59,18 +51,14 @@ module top (
         .en2(~(StallDecode2) && ~rst),
         .rst2(FlushDecode2),
         .PCF1(PCF1),
-        .PCPlus8F1(PCPlus8F1),
         .InstrF1(InstrF1),
         .PCF2(PCF2),
-        .PCPlus8F2(PCPlus8F2),
         .InstrF2(InstrF2),
         .PCPlus4F1(PCPlus4F1),
         .PCPlus4F2(PCPlus4F2),
 
         .PCD1(PCD1),
         .PCD2(PCD2),
-        .PCPlus8D1(PCPlus8D1),
-        .PCPlus8D2(PCPlus8D2),
         .InstrD1(InstrD1),
         .PCPlus4D1(PCPlus4D1),
         .PCPlus4D2(PCPlus4D2),
@@ -116,15 +104,11 @@ module top (
     logic        ALUSrcBD2;
     logic        ALUSrcAD2;
     logic [2:0]  AddressingControlD2; 
-    logic LoadD1;
     logic LoadD2;
     logic StoreD1;
-    logic StoreD2;
-
 
     decode decode_inst (
         .clk(clk),
-        .rst(rst),
         .InstrD1(InstrD1),
         .InstrD2(InstrD2),
         .ResultW1(ResultW1),
@@ -166,12 +150,9 @@ module top (
         .ALUSrcBD2(ALUSrcBD2),
         .AddressingControlD1(AddressingControlD1),
         .AddressingControlD2(AddressingControlD2),
-        .LoadD1(LoadD1),
         .LoadD2(LoadD2),
         .StoreD1(StoreD1),
-        .StoreD2(StoreD2),
-        .a0(a0),
-        .a1(a1)
+        .a0(a0)
 
     );
 
@@ -197,10 +178,6 @@ module top (
     logic ALUSrcBE2;
     logic [2:0] AddressingControlE2;
     logic [2:0] BranchTypeE2;
-    logic LoadE1;
-    logic LoadE2;
-    logic StoreE1;
-    logic StoreE2;
 
     logic [31:0] RD1E;
     logic [31:0] RD2E;
@@ -216,8 +193,6 @@ module top (
     logic [4:0] RdE2;
     logic [31:0] ImmExtE1;
     logic [31:0] ImmExtE2;
-    logic [31:0] PCPlus8E1;
-    logic [31:0] PCPlus8E2;
     logic [31:0] PCPlus4E1;
     logic [31:0] PCPlus4E2;
 
@@ -240,8 +215,6 @@ module top (
         .ALUSrcBD1         (ALUSrcBD1),
         .AddressingControlD1(AddressingControlD1),
         .BranchTypeD1      (BranchTypeD1),
-        .LoadD1(LoadD1),
-        .StoreD1(StoreD1),
 
         .RegWriteD2        (RegWriteD2),
         .ResultSrcD2       (ResultSrcD2),
@@ -253,8 +226,6 @@ module top (
         .ALUSrcBD2         (ALUSrcBD2),
         .AddressingControlD2(AddressingControlD2),
         .BranchTypeD2      (BranchTypeD2),
-        .LoadD2(LoadD2),
-        .StoreD2(StoreD2),
 
         // data signals from reg_file.sv & instructions
         .RD1D             (RD1D),
@@ -271,8 +242,6 @@ module top (
         .RdD2             (RdD2),
         .ImmExtD1         (ImmExtD1),
         .ImmExtD2         (ImmExtD2),
-        .PCPlus8D1         (PCPlus8D1),
-        .PCPlus8D2         (PCPlus8D2),
         .PCPlus4D1(PCPlus4D1),
         .PCPlus4D2(PCPlus4D2),
 
@@ -287,8 +256,6 @@ module top (
         .ALUSrcBE1         (ALUSrcBE1),
         .AddressingControlE1(AddressingControlE1),
         .BranchTypeE1      (BranchTypeE1),
-        .LoadE1(LoadE1),
-        .StoreE1(StoreE1),
 
         .RegWriteE2        (RegWriteE2),
         .ResultSrcE2       (ResultSrcE2),
@@ -300,8 +267,6 @@ module top (
         .ALUSrcBE2         (ALUSrcBE2),
         .AddressingControlE2(AddressingControlE2),
         .BranchTypeE2      (BranchTypeE2),
-        .LoadE2(LoadE2),
-        .StoreE2(StoreE2),
 
         .RD1E             (RD1E),
         .RD2E             (RD2E),
@@ -318,9 +283,7 @@ module top (
         .ImmExtE1         (ImmExtE1),
         .ImmExtE2         (ImmExtE2),
         .PCPlus4E1(PCPlus4E1),
-        .PCPlus4E2(PCPlus4E2),
-        .PCPlus8E1         (PCPlus8E1),
-        .PCPlus8E2         (PCPlus8E2)
+        .PCPlus4E2(PCPlus4E2)
     );
 
 // Execute
@@ -396,12 +359,10 @@ module top (
     logic [31:0] ALUResultM1;
     logic [31:0] WriteDataM1;
     logic [4:0] RdM1;
-    logic [31:0] PCPlus8M1;
 
     logic [31:0] ALUResultM2;
     logic [31:0] WriteDataM2;
     logic [4:0] RdM2;
-    logic [31:0] PCPlus8M2;
 
     logic [31:0] PCPlus4M1;
     logic [31:0] PCPlus4M2;
@@ -428,12 +389,10 @@ module top (
         .ALUResultE1        (ALUResultE1),
         .WriteDataE1        (WriteDataE1),
         .RdE1               (RdE1),
-        .PCPlus8E1          (PCPlus8E1),
 
         .ALUResultE2        (ALUResultE2),
         .WriteDataE2        (WriteDataE2),
         .RdE2               (RdE2),
-        .PCPlus8E2          (PCPlus8E2),
 
         .PCPlus4E1(PCPlus4E1),
         .PCPlus4E2(PCPlus4E2),
@@ -452,7 +411,6 @@ module top (
         .ALUResultM1        (ALUResultM1),
         .WriteDataM1        (WriteDataM1),
         .RdM1               (RdM1),
-        .PCPlus8M1          (PCPlus8M1),
 
         .PCPlus4M1(PCPlus4M1),
         .PCPlus4M2(PCPlus4M2),
@@ -460,8 +418,7 @@ module top (
 
         .ALUResultM2        (ALUResultM2),
         .WriteDataM2        (WriteDataM2),
-        .RdM2               (RdM2),
-        .PCPlus8M2          (PCPlus8M2)
+        .RdM2               (RdM2)
     );
 
 // Memory
@@ -496,12 +453,10 @@ module top (
     logic [31:0] ALUResultW1;
     logic [31:0] ReadDataW1;
     logic [4:0] RdW1;
-    logic [31:0] PCPlus8W1;
 
     logic [31:0] ALUResultW2;
     logic [31:0] ReadDataW2;
     logic [4:0] RdW2;
-    logic [31:0] PCPlus8W2;
 
     logic [31:0] PCPlus4W1;
     logic [31:0] PCPlus4W2;
@@ -523,12 +478,10 @@ module top (
         .ALUResultM1 (ALUResultM1),
         .ReadDataM1  (ReadDataM1),
         .RdM1        (RdM1),
-        .PCPlus8M1   (PCPlus8M1),
 
         .ALUResultM2 (ALUResultM2),
         .ReadDataM2  (ReadDataM2),
         .RdM2        (RdM2),
-        .PCPlus8M2   (PCPlus8M2),
 
         .PCPlus4M1(PCPlus4M1),
         .PCPlus4M2(PCPlus4M2),
@@ -543,14 +496,13 @@ module top (
         .ALUResultW1 (ALUResultW1),
         .ReadDataW1  (ReadDataW1),
         .RdW1        (RdW1),
-        .PCPlus8W1   (PCPlus8W1),
 
         .ALUResultW2 (ALUResultW2),
         .ReadDataW2  (ReadDataW2),
         .RdW2        (RdW2),
         .PCPlus4W1(PCPlus4W1),
-        .PCPlus4W2(PCPlus4W2),
-        .PCPlus8W2   (PCPlus8W2)
+        .PCPlus4W2(PCPlus4W2)
+
     );
 
 // WriteBack
@@ -560,15 +512,14 @@ module top (
     writeback writeback_inst (
         .ALUResultW1 (ALUResultW1),
         .ReadDataW1  (ReadDataW1),
-        .PCPlus8W1   (PCPlus8W1),
         .ResultSrcW1 (ResultSrcW1),
+
 
         .PCPlus4W1(PCPlus4W1),
         .PCPlus4W2(PCPlus4W2),
 
         .ALUResultW2 (ALUResultW2),
         .ReadDataW2  (ReadDataW2),
-        .PCPlus8W2   (PCPlus8W2),
         .ResultSrcW2 (ResultSrcW2),
         
         .ResultW1    (ResultW1),
@@ -599,8 +550,6 @@ module top (
     logic FlushExecute2;
     logic FlushDecode2;
     logic FlushWriteback2;
-    logic BranchIn1;
-    logic BranchIn2;
     logic FlushMemory1;
     logic FlushMemory2;
 
@@ -624,12 +573,8 @@ module top (
         .RegWriteM1   (RegWriteM1),
         .RegWriteW2   (RegWriteW2),
         .RegWriteM2   (RegWriteM2),
-        .PCE1(PCE1),
-        .PCE2(PCE2),
         .PCD1(PCD1),
         .PCD2(PCD2),
-        .ALUResultE1(ALUResultE1),
-        .ALUResultE2(ALUResultE2),
 
         .ResultSrcE1  (ResultSrcE1),
         .ResultSrcE2  (ResultSrcE2),
@@ -641,14 +586,8 @@ module top (
         .RdD2(RdD2),
         .JumpD1(JumpD1),
         .JumpD2(JumpD2),
-        .LoadE1(LoadE1),
-        .LoadE2(LoadE2),
-        .LoadD1(LoadD1),
         .LoadD2(LoadD2),
         .StoreD1(StoreD1),
-        .StoreD2(StoreD2),
-        .StoreE1(StoreE1),
-        .StoreE2(StoreE2),
 
         // outputs to control forwarding & stalling
         .ForwardAE1   (ForwardAE1),
@@ -673,11 +612,8 @@ module top (
         .FlushWriteback1 (FlushWriteback1),
         .FlushWriteback2 (FlushWriteback2),
         .FlushMemory1(FlushMemory1),
-        .FlushMemory2(FlushMemory2),
+        .FlushMemory2(FlushMemory2)
 
-        .BranchIn1(BranchIn1),
-        .BranchIn2 (BranchIn2)
     );
-
 
 endmodule

@@ -16,8 +16,6 @@ module decode_to_execute_register(
     input logic ALUSrcBD1,
     input logic [2:0] AddressingControlD1,
     input logic [2:0] BranchTypeD1,
-    input logic LoadD1,
-    input logic StoreD1,
 
     input logic RegWriteD2,
     input logic [1:0] ResultSrcD2,
@@ -29,9 +27,6 @@ module decode_to_execute_register(
     input logic ALUSrcBD2,
     input logic [2:0] AddressingControlD2,
     input logic [2:0] BranchTypeD2,
-    input logic LoadD2,
-    input logic StoreD2,
-
 
     // data signals from reg_file.sv & instructions
     input logic [31:0] RD1D,
@@ -48,8 +43,6 @@ module decode_to_execute_register(
     input logic [4:0] RdD2,
     input logic [31:0] ImmExtD1,
     input logic [31:0] ImmExtD2,
-    input logic [31:0] PCPlus8D1,
-    input logic [31:0] PCPlus8D2,
     input logic [31:0]    PCPlus4D1, // PC + 4
     input logic [31:0]    PCPlus4D2, // PC + 4
 
@@ -92,13 +85,8 @@ module decode_to_execute_register(
     output logic [31:0] ImmExtE1,
     output logic [31:0] ImmExtE2,
     output logic [31:0]    PCPlus4E1, // PC + 4
-    output logic [31:0]    PCPlus4E2, // PC + 4
-    output logic [31:0] PCPlus8E1,
-    output logic StoreE1,
-    output logic StoreE2,
-    output logic LoadE1,
-    output logic LoadE2,
-    output logic [31:0] PCPlus8E2
+    output logic [31:0]    PCPlus4E2 // PC + 4
+
 );
     always_ff @(posedge clk) begin
 
@@ -114,8 +102,6 @@ module decode_to_execute_register(
             ALUSrcBE1 <= 1'b0;
             AddressingControlE1 <= 3'b0;
             BranchTypeE1 <= 3'b0;
-            StoreE1 <= 1'b0;
-            LoadE1 <= 1'b0;
 
             RD1E <= 32'b0;
             RD2E <= 32'b0;
@@ -124,7 +110,7 @@ module decode_to_execute_register(
             Rs2E <= 5'b0;
             RdE1 <= 5'b0;
             ImmExtE1 <= 32'b0;
-            PCPlus8E1 <= 32'b0;
+
             PCPlus4E1 <= 32'b0;
 
         end
@@ -140,8 +126,6 @@ module decode_to_execute_register(
             ALUSrcBE1 <= ALUSrcBD1;
             AddressingControlE1 <= AddressingControlD1;
             BranchTypeE1 <= BranchTypeD1;
-            LoadE1 <= LoadD1;
-            StoreE1 <= StoreD1;
             
             RD1E <= RD1D;
             RD2E <= RD2D;
@@ -150,7 +134,6 @@ module decode_to_execute_register(
             Rs2E <= Rs2D;
             RdE1 <= RdD1;
             ImmExtE1 <= ImmExtD1;
-            PCPlus8E1 <= PCPlus8D1;
             PCPlus4E1 <= PCPlus4D1;
 
         end
@@ -171,8 +154,6 @@ module decode_to_execute_register(
             ALUSrcBE2 <= 1'b0;
             AddressingControlE2 <= 3'b0;
             BranchTypeE2 <= 3'b0;
-            LoadE2 <= 1'b0;
-            StoreE2 <= 1'b0;
             
             RD4E <= 32'b0;
             RD5E <= 32'b0;
@@ -181,7 +162,6 @@ module decode_to_execute_register(
             Rs5E <= 5'b0;
             RdE2 <= 5'b0;
             ImmExtE2 <= 32'b0;
-            PCPlus8E2 <= 32'b0;
             PCPlus4E2 <= 32'b0;
 
 
@@ -199,8 +179,6 @@ module decode_to_execute_register(
             ALUSrcBE2 <= ALUSrcBD2;
             AddressingControlE2 <= AddressingControlD2;
             BranchTypeE2 <= BranchTypeD2;
-            LoadE2 <= LoadD2;
-            StoreE2 <= StoreD2;
 
             RD4E <= RD4D;
             RD5E <= RD5D;
@@ -209,7 +187,6 @@ module decode_to_execute_register(
             Rs5E <= Rs5D;
             RdE2 <= RdD2;
             ImmExtE2 <= ImmExtD2;
-            PCPlus8E2 <= PCPlus8D2;
             PCPlus4E2 <= PCPlus4D2;
 
         end

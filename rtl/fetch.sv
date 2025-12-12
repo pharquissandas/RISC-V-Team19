@@ -9,18 +9,12 @@ module fetch(
     input logic [1:0] PCSrcE2,
     input logic [31:0] PCTargetE2,
     input logic [31:0] ALUResultE2,
-
-    input logic BranchIn1,
-    input logic BranchIn2,
-
     
     output logic [31:0] InstrF1,
     output logic [31:0] InstrF2,
     output logic [31:0] PCF1,
-    output logic [31:0] PCPlus8F1,
     output logic [31:0] PCPlus4F1,
     output logic [31:0] PCF2,
-    output logic [31:0] PCPlus8F2,
     output logic [31:0] PCPlus4F2
 );
 
@@ -44,15 +38,11 @@ module fetch(
         .PCSrcE2(PCSrcE2),
         .ALUResultE2(ALUResultE2),
         .PCTargetE2(PCTargetE2),
-        .BranchIn1(BranchIn1),
-        .BranchIn2(BranchIn2),
 
         .PCF1(PCF1_IN),
         .PCF2(PCF2_IN),
         .PCPlus4F1(PCPlus4F1),
-        .PCPlus4F2(PCPlus4F2),
-        .PCPlus8F1(PCPlus8F1),
-        .PCPlus8F2(PCPlus8F2)
+        .PCPlus4F2(PCPlus4F2)
     );
 
     instr_mem instr_mem_inst(

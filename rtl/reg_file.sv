@@ -18,8 +18,7 @@ module reg_file #(
     output logic [DATA_WIDTH-1:0]       RD2,   // register file output for rs2
     output logic [DATA_WIDTH-1:0]       RD4,   // register file output for rs4
     output logic [DATA_WIDTH-1:0]       RD5,   // register file output for rs5
-    output logic [DATA_WIDTH-1:0]       a0,    // register file output for testbenches for pipeline 1
-    output logic [DATA_WIDTH-1:0]       a1     // register file output for testbenches for pipeline 2
+    output logic [DATA_WIDTH-1:0]       a0    // register file output for testbenches for pipeline 1
 
 );
 
@@ -43,6 +42,5 @@ module reg_file #(
     assign RD5 = ram_array[AD5];
 
     assign a0  = ram_array[5'b01010]; //a0 = reg x10
-    assign a1  = ram_array[5'b01011]; //a1 = reg x11
 
 endmodule
